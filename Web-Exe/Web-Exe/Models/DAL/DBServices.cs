@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 
 using cuisin.Models;
+using resturantwebApp.Models.DAL;
 
 public class DBServices
     {
@@ -160,7 +161,7 @@ public class DBServices
         }
     }
 
-    //Get all resturant data
+    //Get all resturant Data
     public List<Businesses> getBusinesses()
     {
         SqlConnection con = null;
@@ -208,4 +209,54 @@ public class DBServices
         }
 
     }
+
+
+
+    //Get all Campaingns Data
+    public List<Campaingn> getcampaingns()
+    {
+        SqlConnection con = null;
+        List<Campaingn> CampaingnsList = new List<Campaingn>();
+
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+            String selectSTR = "select * from campaingn_2021";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Campaingn C = new Campaingn();
+
+                C.Id = Convert.ToInt32(dr["id"]);
+                C.Id_rest = Convert.ToInt32(dr["id_rest"]);
+                C.Budget = Convert.ToInt32(dr["budget"]);
+                C.Amount_use = Convert.ToDouble((dr["amount_use"]));
+                C.Num_clicks = Convert.ToInt32(dr["num_clicks"]);
+                C.Num_views = Convert.ToInt32(dr["num_views"]);
+                CampaingnsList.Add(C);
+            }
+
+            return CampaingnsList;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+
 }

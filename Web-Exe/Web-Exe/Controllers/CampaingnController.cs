@@ -1,4 +1,5 @@
-﻿using System;
+﻿using resturantwebApp.Models.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,9 +11,18 @@ namespace resturantwebApp.Controllers
     public class CampaingnController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                Campaingn campaingn = new Campaingn();
+                List<Campaingn> campaingnsList = campaingn.Read();
+                return Ok(campaingnsList);
+            }
+            catch ( Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
 
         // GET api/<controller>/5
