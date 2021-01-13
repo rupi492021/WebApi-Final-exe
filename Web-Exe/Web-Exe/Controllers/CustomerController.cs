@@ -25,7 +25,6 @@ namespace cuisin.Controllers
         public int Post([FromBody]Customer customer)
         {
             return customer.Insert();
-            // return flight;
         }
 
         // PUT api/<controller>/5

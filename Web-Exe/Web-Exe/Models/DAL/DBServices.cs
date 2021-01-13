@@ -103,7 +103,64 @@ public class DBServices
             return command;
         }
 
-    
+
+    //Insert New Campaingn
+    public int Insert(Campaign campaign)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(campaign);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildInsertCommand(Campaign campaign)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1}, {2}, {3}, {4}, '{5}')", campaign.Id_rest, campaign.Budget, campaign.Amount_use, campaign.Num_clicks, campaign.Num_views, campaign.Status);
+        String prefixc = "INSERT INTO [campaingn_2021] " + "([id_rest],[budget],[amount_use],[num_clicks],[num_views],[status])";
+        command = prefixc + sb.ToString();
+
+        return command;
+    }
+
+
     //Check if customer is Exits, if yes give back all the data about the customer
     public List<Customer> CheckIfExits(string mail, string password)
     {
@@ -213,10 +270,10 @@ public class DBServices
 
 
     //Get all Campaingns Data
-    public List<Campaingn> getcampaingns()
+    public List<Campaign> getcampaingns()
     {
         SqlConnection con = null;
-        List<Campaingn> CampaingnsList = new List<Campaingn>();
+        List<Campaign> campaignsList = new List<Campaign>();
 
         try
         {
@@ -230,7 +287,7 @@ public class DBServices
 
             while (dr.Read())
             {   // Read till the end of the data into a row
-                Campaingn C = new Campaingn();
+                Campaign C = new Campaign();
 
                 C.Id = Convert.ToInt32(dr["id"]);
                 C.Id_rest = Convert.ToInt32(dr["id_rest"]);
@@ -238,10 +295,10 @@ public class DBServices
                 C.Amount_use = Convert.ToDouble((dr["amount_use"]));
                 C.Num_clicks = Convert.ToInt32(dr["num_clicks"]);
                 C.Num_views = Convert.ToInt32(dr["num_views"]);
-                CampaingnsList.Add(C);
+                campaignsList.Add(C);
             }
 
-            return CampaingnsList;
+            return campaignsList;
         }
         catch (Exception ex)
         {

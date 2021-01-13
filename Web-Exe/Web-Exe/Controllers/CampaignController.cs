@@ -8,16 +8,16 @@ using System.Web.Http;
 
 namespace resturantwebApp.Controllers
 {
-    public class CampaingnController : ApiController
+    public class CampaignController : ApiController
     {
         // GET api/<controller>
         public IHttpActionResult Get()
         {
             try
             {
-                Campaingn campaingn = new Campaingn();
-                List<Campaingn> campaingnsList = campaingn.Read();
-                return Ok(campaingnsList);
+                Campaign campaigns = new Campaign();
+                List<Campaign> campaignsList = campaigns.Read();
+                return Ok(campaignsList);
             }
             catch ( Exception e)
             {
@@ -32,8 +32,9 @@ namespace resturantwebApp.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public int Post([FromBody]Campaign campaign)
         {
+            return campaign.Insert();
         }
 
         // PUT api/<controller>/5

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace resturantwebApp.Models.DAL
 {
-    public class Campaingn
+    public class Campaign
     {
         int id;
         int id_rest;
@@ -15,7 +15,7 @@ namespace resturantwebApp.Models.DAL
         int num_views;
         bool status;
 
-        public Campaingn(int id, int id_rest, int budget, double amount_use, int num_clicks, int num_views, bool status)
+        public Campaign(int id, int id_rest, int budget, double amount_use, int num_clicks, int num_views, bool status)
         {
             Id = id;
             Id_rest = id_rest;
@@ -34,14 +34,21 @@ namespace resturantwebApp.Models.DAL
         public int Num_views { get => num_views; set => num_views = value; }
         public bool Status { get => status; set => status = value; }
 
-        public Campaingn() {}
+        public Campaign() {}
 
 
-        public List<Campaingn> Read()
+        public List<Campaign> Read()
         {
             DBServices dbs = new DBServices();
-            List<Campaingn> campaingnsList = dbs.getcampaingns();
-            return campaingnsList;
+            List<Campaign> campaignsList = dbs.getcampaingns();
+            return campaignsList;
+        }
+
+        public int Insert()
+        {
+            DBServices dbs = new DBServices();
+            return dbs.Insert(this);
+
         }
     }
 }
