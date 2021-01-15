@@ -29,6 +29,11 @@
             background-color: blueviolet;
             margin-bottom: 10px;
         }
+
+        td{
+
+            height: 25px;
+        }
     </style>
 
 
@@ -38,7 +43,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script src="../Scripts/ajaxCallsStub.js"></script>
 
 
@@ -236,6 +240,27 @@
         // this function is activated in case of a success
         function getSuccess(campdata) {
             cars = campdata; // keep the cars array in a global variable;
+            console.log(campdata)
+            //str = ""
+            //for (var i = 0; i < campdata.length; i++) {
+            //    let dataCamp = "data-carId='" + campdata[i].Id + "'";
+            //    str += "<tr role='row' class='odd'>";
+            //    str += '<td class="sorting_1">';
+            //    str += '<button type="button" class="editBtn btn btn-success" data-CampainId="' + campdata[i].Id + '"> Edit </button>';
+            //    str += '<button type="button" class="viewBtn btn btn-info" data-CampainId="' + campdata[i].Id + '"> View </button>';
+            //    str += '<button type="button" class="deleteBtn btn btn-danger" data-CampainId="' + campdata[i].Id + '"> Delete </button>';
+            //    str += '</td>';
+            //    str += ' <td>' + campdata[i].Id + '</td>';
+            //    str += ' <td>' + campdata[i].Rest_name + '</td>';
+            //    str += ' <td>' + campdata[i].Budget + '</td>';
+            //    str += ' <td>' + campdata[i].Amount_use + '</td>';
+            //    str += ' <td>' + campdata[i].Num_views + '</td>';
+            //    str += ' <td>' + campdata[i].Num_clicks + '</td>';
+            //    str += ' </tr>';
+            //    $("#camptable").append(str);
+
+            //}
+
             try {
                 tbl = $('#camptable').DataTable({
                     data: campdata,
@@ -253,9 +278,7 @@
                         },
               
                         { data: "Id" },
-
-                        { data: "Id_rest" },
-
+                        { data: "Rest_name" },
                         { data: "Budget" },
                         { data: "Amount_use" },
                         { data: "Num_views" },
@@ -300,6 +323,7 @@
             <table id="camptable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Campaiangn No</th>
                         <th>Restaurant</th>
                         <th>Budget</th>
@@ -317,80 +341,12 @@
             <form id="carForm">
                 <div class="form-group row">
                     <div class="form-group col-sm-3">
-                        <label for="manufacturer"><span class="red-star">★ </span>Manufacturer</label>
-                        <input type="text" class="form-control" id="manufacturer" placeholder="Enter the manufacturer name" required>
+                        <label for="manufacturer"><span class="red-star">★ </span>Update Budget</label>
+                        <input type="number" class="form-control" id="manufacturer" placeholder="Enter the manufacturer name" required>
                     </div>
-
-
-                    <div class="form-group col-sm-3">
-                        <label for="model"><span class="red-star">★ </span>Model</label>
-                        <input type="text" class="form-control" id="model" placeholder="Enter the model name" required>
-                    </div>
-
-
-                    <div class="form-group col-sm-3">
-                        <label for="year"><span class="red-star">★ </span>Year</label>
-                        <select id="year" class="form-control" required>
-                            <option value="">Choose Year</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-3">
-                        <label for="price"><span class="red-star">★ </span>Price</label>
-                        <input type="number" class="form-control" id="price" placeholder="Enter the price" required />
-                    </div>
-
-
                 </div>
 
-                <div class="form-group row">
-
-
-                    <div class="form-group col-sm-3">
-                        <label for="color"><span class="red-star">★ </span>Color</label>
-                        <select class="form-control" id="color" required>
-                            <option value="">Choose Color</option>
-                            <option value="White"> White </option>
-                            <option value="Blue"> Blue </option>
-                            <option value="Black"> Black </option>
-                            <option value="Red"> Red </option>
-                            <option value="Grey"> Grey </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-3">
-                        <label for="hand"><span class="red-star">★ </span>Hand</label>
-                        <select class="form-control" id="hand" required>
-                            <option value="">Choose Hand</option>
-                            <option value="1"> 1 </option>
-                            <option value="2"> 2 </option>
-                            <option value="3"> 3 </option>
-                            <option value="4"> 4 </option>
-                            <option value="5"> 5 </option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col-sm-3">
-                        <label for="automatic"><span class="red-star">★ </span>Automatic?</label>
-                        <input type="checkbox" class="form-control" id="automatic" checked />
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="form-group col-sm-8">
-                        <label for="description">Description</label>
-                        <textarea rows="6" class="form-control" id="description" placeholder="Enter the description"></textarea>
-                    </div>
-
-                    <div class="form-group col-sm-4">
-                        <img src="images/car.jpg" id="image" />
-                    </div>
-
-                </div>
+              
 
                 <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button>
                 <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
