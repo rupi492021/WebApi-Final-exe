@@ -15,8 +15,8 @@ namespace resturantwebApp.Controllers
         {
             try
             {
-                Campain campaigns = new Campain();
-                List<Campain> campaignsList = campaigns.Read();
+                Campaign campaigns = new Campaign();
+                List<Campaign> campaignsList = campaigns.Read();
                 return Ok(campaignsList);
             }
             catch ( Exception e)
@@ -32,7 +32,7 @@ namespace resturantwebApp.Controllers
         }
 
         // POST api/<controller>
-        public int Post([FromBody]Campain campaign)
+        public int Post([FromBody]Campaign campaign)
         {
             return campaign.Insert();
         }
@@ -40,8 +40,17 @@ namespace resturantwebApp.Controllers
         // PUT api/<controller>/5
         public int Put(int id, int budget)
         {
-            Campain campaign = new Campain();
+            Campaign campaign = new Campaign();
             return campaign.Update_Budget(id, budget); 
+        }
+
+        // PUT api/<controller>/5
+        [HttpPut]
+        [Route("api/Campaign/{id}/{status}")]
+        public int Put(int id, bool? status)
+        {
+            Campaign campaign = new Campaign();
+            return campaign.DeleteCampain(id, status);
         }
 
         // DELETE api/<controller>/5

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace resturantwebApp.Models.DAL
 {
-    public class Campain
+    public class Campaign
     {
         int id;
         string rest_name;
@@ -16,7 +16,7 @@ namespace resturantwebApp.Models.DAL
         int num_views;
         bool status;
 
-        public Campain(int id, string rest_name, int id_rest, int budget, double amount_use, int num_clicks, int num_views, bool status)
+        public Campaign(int id, string rest_name, int id_rest, int budget, double amount_use, int num_clicks, int num_views, bool status)
         {
             Id = id;
             Rest_name = rest_name;
@@ -40,12 +40,12 @@ namespace resturantwebApp.Models.DAL
 
        
 
-        public Campain() { }
+        public Campaign() { }
 
-        public List<Campain> Read()
+        public List<Campaign> Read()
         {
             DBServices dbs = new DBServices();
-            List<Campain> campaignsList = dbs.getcampaingns();
+            List<Campaign> campaignsList = dbs.getcampaingns();
             return campaignsList;
         }
 
@@ -61,5 +61,11 @@ namespace resturantwebApp.Models.DAL
             DBServices dbs = new DBServices();
             return dbs.Update_Budget(id, budget);
         }
+        public int DeleteCampain(int id, bool? status)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.DeleteCampain(id, status);
+        }
+        
     }
 }
