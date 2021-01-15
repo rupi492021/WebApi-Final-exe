@@ -37,17 +37,12 @@ namespace cuisin.Models
         public string Featured_image { get => featured_image; set => featured_image = value; }
         public Businesses() { }
 
-        //public int Insert()
-        //{
-        //    DBServices dbs = new DBServices();
-        //    return  dbs.Insert(this);
-            
-        //}
 
-        public List<Businesses> Read()
+
+        public List<Businesses> Read(string category)
         {
             DBServices dbs = new DBServices();
-            List<Businesses> bList = dbs.getBusinesses();
+            List<Businesses> bList = dbs.getBusinesses(category);
             return bList;
         }
 

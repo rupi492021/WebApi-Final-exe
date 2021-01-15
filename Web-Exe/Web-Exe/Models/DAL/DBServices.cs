@@ -326,7 +326,7 @@ public class DBServices
    
     
     //Get all resturant Data
-    public List<Businesses> getBusinesses()
+    public List<Businesses> getBusinesses(string category)
     {
         SqlConnection con = null;
         List<Businesses> bList = new List<Businesses>();
@@ -334,8 +334,9 @@ public class DBServices
         try
         {
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-
-            String selectSTR = "select * from Restaurants_2021";
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("select * from Restaurants_2021 where category like '%{0}%'", category);
+            String selectSTR = sb.ToString();
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
