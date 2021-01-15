@@ -11,6 +11,8 @@ namespace cuisin.Controllers
     public class BusinessesController : ApiController
     {
         // GET api/<controller>
+        [HttpGet]
+        [Route("api/Businesses/{category}")]
         public List<Businesses> Get(string category)
         {
             Businesses businesses = new Businesses();
