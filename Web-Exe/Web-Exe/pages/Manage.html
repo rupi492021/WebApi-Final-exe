@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-
+    <script src="../Scripts/ajaxCalls.js"></script>
     <style type="text/css">
 
         button {
@@ -67,7 +67,7 @@
 
 
             // once the document is ready we fetch a list of cars from the server
-            ajaxCall("GET", "../api/cars", "", getSuccess, error);
+            ajaxCall("GET", "../api/Campaign", "", getSuccess, error);
 
             $("#carForm").submit(onSubmitFunc); // wire the submit event to a function called f1
 
@@ -84,7 +84,7 @@
                 markSelected(this);
                 $("#editDiv").show();
                 $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
-                populateFields(this.getAttribute('data-carId')); // fill the form fields according to the selected row
+                populateFields(this.getAttribute('data-campId')); // fill the form fields according to the selected row
             });
 
             $(document).on("click", ".viewBtn", function () {
@@ -92,13 +92,13 @@
                 markSelected(this);
                 $("#editDiv").show();
                 $("#editDiv :input").attr("disabled", "disabled"); // view mode: disable all controls in the form
-                populateFields(this.getAttribute('data-carId'));
+                populateFields(this.getAttribute('data-campId'));
             });
 
             $(document).on("click", ".deleteBtn", function () {
                 mode = "delete";
                 markSelected(this);
-                var carId = this.getAttribute('data-carId');
+                var carId = this.getAttribute('data-campId');
                 swal({ // this will open a dialouge
                     title: "Are you sure ??",
                     text: "",
@@ -115,7 +115,7 @@
 
         // mark the selected row
         function markSelected(btn) {
-            $("#carsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            $("#camptable tr").removeClass("selected"); // remove seleced class from rows that were selected before
             row = (btn.parentNode).parentNode; // button is in TD which is in Row
             row.className = 'selected'; // mark as selected
         }
@@ -234,58 +234,44 @@
         }
 
         // this function is activated in case of a success
-        function getSuccess(carsdata) {
-            cars = carsdata; // keep the cars array in a global variable;
+        function getSuccess(campdata) {
+            cars = campdata; // keep the cars array in a global variable;
             try {
-                tbl = $('#carsTable').DataTable({
-                    data: carsdata,
+                tbl = $('#camptable').DataTable({
+                    data: campdata,
                     pageLength: 5,
                     columns: [
                         {
                             render: function (data, type, row, meta) {
-                                let dataCar = "data-carId='" + row.Id + "'";
+                                let dataCamp = "data-carId='" + row.Id + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCar + "> Edit </button>";
-                                viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCar + "> View </button>";
-                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCar + "> Delete </button>";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCamp + "> Edit </button>";
+                                viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCamp + "> View </button>";
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCamp + "> Delete </button>";
                                 return editBtn + viewBtn + deleteBtn;
                             }
                         },
+              
                         { data: "Id" },
-                        { data: "Manufacturer" },
-                        { data: "Model" },
-                        { data: "Year" },
-                        { data: "Price" },
+
+                        { data: "Id_rest" },
+
+                        { data: "Budget" },
+                        { data: "Amount_use" },
+                        { data: "Num_views" },
+                        { data: "Num_views" },
                         {
-                            data: "Color",
-                            render: function (data, type, row, meta) {
-                                return "<div class = 'colorDiv' style='background-color:" + data + "'> </div>"
-                            }
-                        },
-                        { data: "Hand" },
-                        {
-                            data: "Automatic",
-                            render: function (data, type, row, meta) {
-                                if (data == true)
-                                    return '<input type="checkbox" checked disabled="disabled" />';
-                                else
-                                    return '<input type="checkbox" disabled="disabled"/>';
-                            }
-                        },
-                        {
-                            data: "Description",
-                            visible: false
-                        },
-                        {
-                            data: "Image",
+                            data: "Status",
                             visible: false
                         }
+                       
                     ],
                 });
 
             }
 
             catch (err) {
+                
                 alert(err);
             }
         }
@@ -311,15 +297,15 @@
     <div class="container">
         <input type="button" value="New" class="btn btn-primary btn-lg" id="newBTN" />
         <form id="pForm">
-            <table id="carsTable" class="display nowrap" style="width:100%">
+            <table id="camptable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>Campaiangn No</th>
                         <th>Restaurant</th>
                         <th>Budget</th>
                         <th>Balance</th>
-                        <th>Views</th>
                         <th>Clicks</th>
+                        <th>Views</th>
 
                     </tr>
                 </thead>
