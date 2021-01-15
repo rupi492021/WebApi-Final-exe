@@ -107,7 +107,7 @@ public class DBServices
 
 
     //Insert New Campaingn
-    public int Insert(Campain campaign)
+    public int Insert(Campaign campaign)
     {
 
         SqlConnection con;
@@ -149,7 +149,7 @@ public class DBServices
 
     }
     //--------------------------------------------------------------------
-    private String BuildInsertCommand(Campain campaign)
+    private String BuildInsertCommand(Campaign campaign)
     {
         String command;
 
@@ -211,6 +211,56 @@ public class DBServices
     {
         String command;
         command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id_rest = " +id+ "; ";
+        return command;
+    }
+
+    //Delete Campaign by id - change status to false
+    public int DeleteCampain(int id, bool? status)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildUpdateCommand(id, status);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildUpdateCommand(int id, bool? status)
+    {
+        String command;
+        command = "UPDATE campaingn_2021 SET status = '" + status + "' WHERE id_rest = " + id + "; ";
         return command;
     }
 
@@ -327,10 +377,10 @@ public class DBServices
 
 
     //Get all Campaingns Data
-    public List<Campain> getcampaingns()
+    public List<Campaign> getcampaingns()
     {
         SqlConnection con = null;
-        List<Campain> campaignsList = new List<Campain>();
+        List<Campaign> campaignsList = new List<Campaign>();
 
         try
         {
@@ -344,7 +394,7 @@ public class DBServices
 
             while (dr.Read())
             {   // Read till the end of the data into a row
-                Campain C = new Campain();
+                Campaign C = new Campaign();
 
                 C.Id = Convert.ToInt32(dr["id"]);
                 C.Id_rest = Convert.ToInt32(dr["id_rest"]);
