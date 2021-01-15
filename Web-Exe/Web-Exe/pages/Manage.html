@@ -139,7 +139,7 @@
             }
 
 
-            let cartoSave = {
+            let camptosave = {
                 Id: Id,
                 Image: Image, // for now we do not change the image
                 Manufacturer: $("#manufacturer").val(),
@@ -154,9 +154,9 @@
 
             // add a new Car record to the server
             if (mode == "edit")
-                ajaxCall("PUT", "../api/cars", JSON.stringify(cartoSave), updateSuccess, error);
+                ajaxCall("PUT", "../api/Campaign", JSON.stringify(cartoSave), updateSuccess, error);
             else if (mode == "new")
-                ajaxCall("POST", "../api/cars", JSON.stringify(cartoSave), insertSuccess, error);
+                ajaxCall("POST", "../api/Campaign", JSON.stringify(cartoSave), insertSuccess, error);
             return false;
         }
 
@@ -241,25 +241,7 @@
         function getSuccess(campdata) {
             cars = campdata; // keep the cars array in a global variable;
             console.log(campdata)
-            //str = ""
-            //for (var i = 0; i < campdata.length; i++) {
-            //    let dataCamp = "data-carId='" + campdata[i].Id + "'";
-            //    str += "<tr role='row' class='odd'>";
-            //    str += '<td class="sorting_1">';
-            //    str += '<button type="button" class="editBtn btn btn-success" data-CampainId="' + campdata[i].Id + '"> Edit </button>';
-            //    str += '<button type="button" class="viewBtn btn btn-info" data-CampainId="' + campdata[i].Id + '"> View </button>';
-            //    str += '<button type="button" class="deleteBtn btn btn-danger" data-CampainId="' + campdata[i].Id + '"> Delete </button>';
-            //    str += '</td>';
-            //    str += ' <td>' + campdata[i].Id + '</td>';
-            //    str += ' <td>' + campdata[i].Rest_name + '</td>';
-            //    str += ' <td>' + campdata[i].Budget + '</td>';
-            //    str += ' <td>' + campdata[i].Amount_use + '</td>';
-            //    str += ' <td>' + campdata[i].Num_views + '</td>';
-            //    str += ' <td>' + campdata[i].Num_clicks + '</td>';
-            //    str += ' </tr>';
-            //    $("#camptable").append(str);
-
-            //}
+      
 
             try {
                 tbl = $('#camptable').DataTable({
@@ -270,7 +252,7 @@
                             render: function (data, type, row, meta) {
                                 let dataCamp = "data-carId='" + row.Id + "'";
 
-                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCamp + "> Edit </button>";
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCamp + "> Edit Budget </button>";
                                 viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCamp + "> View </button>";
                                 deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + dataCamp + "> Delete </button>";
                                 return editBtn + viewBtn + deleteBtn;
@@ -338,15 +320,47 @@
         </form>
 
         <div id="editDiv">
-            <form id="carForm">
+            <form id="campForm">
                 <div class="form-group row">
+
                     <div class="form-group col-sm-3">
-                        <label for="manufacturer"><span class="red-star">★ </span>Update Budget</label>
-                        <input type="number" class="form-control" id="manufacturer" placeholder="Enter the manufacturer name" required>
+                        <label for="Restaurant"><span class="red-star">★ </span>Restaurant</label>
+                        <select id="year" class="form-control" required>
+                            <option value="">Choose Year</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                        </select>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <label for="Budget"><span class="red-star">★ </span>Budget</label>
+                        <input type="text" class="form-control" id="Budget" placeholder="Enter the Campaign Budget" required>
+                    </div>
+
+
+                    <div class="form-group col-sm-3">
+                        <label for="Balance"><span class="red-star">★ </span>Balance</label>
+                        <input type="number" class="form-control" id="Balance" placeholder="Balance" required>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="Clicks"><span class="red-star">★ </span>Clicks</label>
+                        <input type="number" class="form-control" id="Clicks" placeholder="Clicks" required>
+                    </div>
+
+
+
+                    <div class="form-group col-sm-3">
+                        <label for="Views"><span class="red-star">★ </span>Views</label>
+                        <input type="number" class="form-control" id="views" placeholder="Views" required />
+                    </div>
+
+
                 </div>
 
-              
+
+                
+
 
                 <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button>
                 <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
