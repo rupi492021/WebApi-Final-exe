@@ -189,7 +189,7 @@
     </Compile>
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\businesses.cs" />
-    <Compile Include="Models\Campaing.cs" />
+    <Compile Include="Models\Campain.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DAL\DBServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

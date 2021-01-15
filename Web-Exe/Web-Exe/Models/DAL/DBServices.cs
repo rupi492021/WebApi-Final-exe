@@ -47,6 +47,7 @@ public class DBServices
         }
 
 
+
     //Insert New Customer 
     public int Insert(Customer customer)
         {
@@ -104,8 +105,9 @@ public class DBServices
         }
 
 
+
     //Insert New Campaingn
-    public int Insert(Campaign campaign)
+    public int Insert(Campain campaign)
     {
 
         SqlConnection con;
@@ -147,7 +149,7 @@ public class DBServices
 
     }
     //--------------------------------------------------------------------
-    private String BuildInsertCommand(Campaign campaign)
+    private String BuildInsertCommand(Campain campaign)
     {
         String command;
 
@@ -159,6 +161,59 @@ public class DBServices
 
         return command;
     }
+
+
+
+    //Update Budget of Campaign by id
+    public int Update_Budget(int id, int budget)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildUpdateCommand(id,budget);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildUpdateCommand(int id, int budget)
+    {
+        String command;
+        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id_rest = " +id+ "; ";
+        return command;
+    }
+
 
 
     //Check if customer is Exits, if yes give back all the data about the customer
@@ -218,6 +273,8 @@ public class DBServices
         }
     }
 
+   
+    
     //Get all resturant Data
     public List<Businesses> getBusinesses()
     {
@@ -270,16 +327,16 @@ public class DBServices
 
 
     //Get all Campaingns Data
-    public List<Campaign> getcampaingns()
+    public List<Campain> getcampaingns()
     {
         SqlConnection con = null;
-        List<Campaign> campaignsList = new List<Campaign>();
+        List<Campain> campaignsList = new List<Campain>();
 
         try
         {
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-            String selectSTR = "select * from campaingn_2021";
+            String selectSTR = "select ca.id,id_rest,[name],budget,amount_use,num_clicks,num_views,[status] from campaingn_2021 as ca inner join Restaurants_2021 as re on ca.id_rest = re.id where[status] = 'true'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -287,14 +344,16 @@ public class DBServices
 
             while (dr.Read())
             {   // Read till the end of the data into a row
-                Campaign C = new Campaign();
+                Campain C = new Campain();
 
                 C.Id = Convert.ToInt32(dr["id"]);
                 C.Id_rest = Convert.ToInt32(dr["id_rest"]);
+                C.Rest_name = (string)(dr["name"]);
                 C.Budget = Convert.ToInt32(dr["budget"]);
                 C.Amount_use = Convert.ToDouble((dr["amount_use"]));
                 C.Num_clicks = Convert.ToInt32(dr["num_clicks"]);
                 C.Num_views = Convert.ToInt32(dr["num_views"]);
+                C.Status = Convert.ToBoolean(dr["status"]);
                 campaignsList.Add(C);
             }
 
