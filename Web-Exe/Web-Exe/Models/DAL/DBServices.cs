@@ -161,6 +161,58 @@ public class DBServices
     }
 
 
+    //Update Budget of Campaign by id
+    public int Update_Budget(int id, int budget)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildUpdateCommand(id,budget);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildUpdateCommand(int id, int budget)
+    {
+        String command;
+        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id_rest = " +id+ "; ";
+        return command;
+    }
+
+
+
     //Check if customer is Exits, if yes give back all the data about the customer
     public List<Customer> CheckIfExits(string mail, string password)
     {

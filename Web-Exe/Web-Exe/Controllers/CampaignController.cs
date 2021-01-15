@@ -38,8 +38,10 @@ namespace resturantwebApp.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public int Put(int id, int budget)
         {
+            Campaign campaign = new Campaign();
+            return campaign.Update_Budget(id, budget); 
         }
 
         // DELETE api/<controller>/5

@@ -50,5 +50,11 @@ namespace resturantwebApp.Models.DAL
             return dbs.Insert(this);
 
         }
+
+        public int Update_Budget(int id, int budget)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.Update_Budget(id, budget);
+        }
     }
 }
