@@ -38,6 +38,12 @@ namespace cuisin.Models
         public Businesses() { }
 
 
+        public List<Businesses> Read()
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getBusinesses();
+            return bList;
+        }
 
         public List<Businesses> Read(string category)
         {

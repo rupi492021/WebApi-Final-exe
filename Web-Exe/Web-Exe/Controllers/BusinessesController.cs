@@ -11,7 +11,14 @@ namespace cuisin.Controllers
     public class BusinessesController : ApiController
     {
         // GET api/<controller>
-        
+
+        public List<Businesses> Get()
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.Read();
+            return bList;
+        }
+
         [HttpGet]
         [Route("api/Businesses/{category}")]
         public List<Businesses> Get(string category)

@@ -10,6 +10,7 @@ namespace resturantwebApp.Models
         int id;
         string name;
 
+
         public Attribute(int id, string name)
         {
             Id = id;
@@ -21,6 +22,7 @@ namespace resturantwebApp.Models
 
         public Attribute() { }
 
+      
 
 
     }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 using cuisin.Models;
 using resturantwebApp.Models.DAL;
+using Web_Exe.Models;
 
 public class DBServices
     {
@@ -162,6 +163,62 @@ public class DBServices
         return command;
     }
 
+
+    //Insert Insert_Att_In_Rest
+    public int Insert_Att_In_Rest(Attribute_In_rest attribute_In_Rest)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(attribute_In_Rest);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildInsertCommand(Attribute_In_rest attribute_In_Rest)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1})", attribute_In_Rest.Id_attr, attribute_In_Rest.Id_rest);
+        String prefixc = "INSERT INTO [Attribute_rest_2021] " + "([Id_attribute],[Id_rest])";
+        command = prefixc + sb.ToString();
+
+        return command;
+    }
 
 
     //Update Budget of Campaign by id
@@ -326,17 +383,26 @@ public class DBServices
    
     
     //Get all resturant Data
-    public List<Businesses> getBusinesses(string category)
+    public List<Businesses> getBusinesses(string category=null)
     {
         SqlConnection con = null;
         List<Businesses> bList = new List<Businesses>();
-
+        string selectSTR = null;
         try
         {
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("select * from Restaurants_2021 where category like '%{0}%'", category);
-            String selectSTR = sb.ToString();
+            if(category == null)
+            {
+                selectSTR = "select * from Restaurants_2021";
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("select * from Restaurants_2021 where category like '%{0}%'", category);
+                selectSTR = sb.ToString();
+            }
+
+            
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -425,5 +491,10 @@ public class DBServices
         }
 
     }
+
+
+
+    
+
 
 }
