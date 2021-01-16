@@ -61,10 +61,10 @@ namespace resturantwebApp.Models.DAL
             DBServices dbs = new DBServices();
             return dbs.Update_Budget(id, budget);
         }
-        public int DeleteCampain(int id, bool? status)
+        public int DeleteCampain(int id)
         {
             DBServices dbs = new DBServices();
-            return dbs.DeleteCampain(id, status);
+            return dbs.DeleteCampain(id);
         }
         
     }

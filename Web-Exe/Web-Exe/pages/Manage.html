@@ -30,8 +30,7 @@
             margin-bottom: 10px;
         }
 
-        td{
-
+        td {
             height: 25px;
         }
     </style>
@@ -43,7 +42,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="../Scripts/ajaxCallsStub.js"></script>
 
 
     <script>
@@ -66,14 +64,23 @@
                 $("#pForm").hide();
                 $("#editDiv").show();
                 clearFields();
-                $("#editDiv :input").prop("disabled", false); // new mode: enable all controls in the form
+                $("#Balance").prop("disabled", true)
+                $("#Clicks").prop("disabled", true)
+                $("#Views").prop("disabled", true)
+
             });
 
 
             // once the document is ready we fetch a list of cars from the server
             ajaxCall("GET", "../api/Campaign", "", getSuccess, error);
+            $("#Cuisin").on("change", function () {
+                let api = "../api/Businesses/" + this.value
+                ajaxCall("GET",api, "", geResSuccess, Reserror);
 
-            $("#carForm").submit(onSubmitFunc); // wire the submit event to a function called f1
+            });
+
+
+            $("#campForm").submit(onSubmitFunc); // wire the submit event to a function called f1
 
             $("#editDiv").hide();
             //sdf
@@ -87,7 +94,12 @@
                 mode = "edit";
                 markSelected(this);
                 $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                $("#editDiv :input").prop("disabled", false);
+                $("#Restaurant").prop("disabled", true)
+                $("#Cuisin").prop("disabled", true)
+                $("#Balance").prop("disabled", true)
+                $("#Clicks").prop("disabled", true)
+                $("#Views").prop("disabled", true) // edit mode: enable all controls in the form
                 populateFields(this.getAttribute('data-campId')); // fill the form fields according to the selected row
             });
 
@@ -126,81 +138,86 @@
 
         // Delete a car from the server
         function DeleteCar(id) {
-            ajaxCall("DELETE", "../api/cars/" + id, "", deleteSuccess, error);
+            ajaxCall("PUT", "../api/Campaign/" + id, "", deleteSuccess, error);
+        }
+        function geResSuccess(res) {
+            let str = "<option value=''>Select Resaurant</option>";
+            for (var i = 0; i < res.length; i++) {
+                str += "<option value='" + res[i].Id +"'>"+res[i].Name+"</option>"
+            }
+            document.getElementById("Restaurant").innerHTML = str;
+        }
+        function Reserror(err) {
+            alert(err)
+
         }
 
         function onSubmitFunc() {
 
-            var Id = -1;
-            var Image = "car.jpg";
+            var _Id = -1;
             if (mode == "edit") {
-                Id = car.Id;
-                Image = car.Image;
-            }
+                _Id = camp.Id;
 
+
+            }
+      
 
             let camptosave = {
-                Id: Id,
-                Image: Image, // for now we do not change the image
-                Manufacturer: $("#manufacturer").val(),
-                Model: $("#model").val(),
-                Year: $("#year").val(),
-                Price: $("#price").val(),
-                Color: $("#color").val(),
-                Hand: $("#hand").val(),
-                Description: $("#description").val(),
-                Automatic: $("#automatic").is(":checked")
+                Id: _Id, 
+                Id_rest: $("#Restaurant").val(),
+                Budget: $("#Budget").val(),
+                Amount_use: $("#Balance").val(),
+                Num_clicks: $("#Clicks").val(),
+                Num_views: $("#Views").val(),
+                Status: true
             }
+            console.log(camptosave)
 
             // add a new Car record to the server
             if (mode == "edit")
-                ajaxCall("PUT", "../api/Campaign", JSON.stringify(cartoSave), updateSuccess, error);
+                ajaxCall("PUT", "../api/Campaign", JSON.stringify(camptosave), updateSuccess, error);
             else if (mode == "new")
-                ajaxCall("POST", "../api/Campaign", JSON.stringify(cartoSave), insertSuccess, error);
+                ajaxCall("POST", "../api/Campaign", JSON.stringify(camptosave), insertSuccess, error);
             return false;
         }
 
         // fill the form fields
-        function populateFields(carId) {
-            car = getCar(carId);
-            $("#manufacturer").val(car.Manufacturer);
-            $("#model").val(car.Model);
-            $("#year").val(car.Year);
-            $("#price").val(car.Price);
-            $("#color").val(car.Color);
-            $("#hand").val(car.Hand);
-            $("#description").val(car.Description);
-            $("#automatic").prop('checked', car.Automatic);
-            $("#image").attr("src", "images/" + car.Image);
+        function populateFields(campId) {
+            camp = getCamp(campId);
+            let str = "<option value='" + camp.Id_rest + "'>" + camp.Rest_name + "</option>";
+            document.getElementById("Restaurant").innerHTML = str;
+            $("#Budget").val(camp.Budget);
+            $("#Balance").val(camp.Amount_use);
+            $("#Cliks").val(camp.Num_clicks);
+            $("#Views").val(camp.Num_views);
+      
         }
 
 
         // fill the form fields
         function clearFields() {
-            $("#manufacturer").val("");
-            $("#model").val("");
-            $("#year").val("");
-            $("#price").val("");
-            $("#color").val("");
-            $("#hand").val("");
-            $("#description").val("");
-            $("#automatic").prop('checked', true);
-            $("#image").attr("src", "images/car.jpg");
+             $("#Cuisin").val(0),
+             $("#Restaurant").val(0),
+             $("#Budget").val(""),
+             $("#Balance").val(""),
+             $("#Clicks").val(""),
+             $("#Views").val("")
         }
 
         // get a car according to its Id
-        function getCar(id) {
-            for (i in cars) {
-                if (cars[i].Id == id)
-                    return cars[i];
+        function getCamp(id) {
+            for (i in camps) {
+                if (camps[i].Id == id)
+                    return camps[i];
             }
             return null;
         }
 
         // success callback function after update
-        function updateSuccess(carsdata) {
+        function updateSuccess(campdata) {
             tbl.clear();
-            redrawTable(tbl, carsdata);
+            ajaxCall("GET", "../api/Campaign", "", getSuccess1, error);
+            redrawTable(tbl, campdata);
             buttonEvents();
             $("#editDiv").hide();
             swal("Updated Successfuly!", "Great Job", "success");
@@ -208,20 +225,25 @@
         }
 
         // success callback function after update
-        function insertSuccess(carsdata) {
+        function insertSuccess(campdata) {
             $("#pForm").show();
             tbl.clear();
-            redrawTable(tbl, carsdata);
+            ajaxCall("GET", "../api/Campaign", "", getSuccess1, error);            
+            redrawTable(tbl, campdata);
             buttonEvents();
             $("#editDiv").hide();
             swal("Inserted Successfuly!", "Great Job", "success");
             mode = "";
         }
+        function getSuccess1(campdata) {
+            redrawTable(tbl, campdata);
+        }
 
         // success callback function after delete
-        function deleteSuccess(carsdata) {
+        function deleteSuccess(campdata) {
             tbl.clear();
-            redrawTable(tbl, carsdata);
+            ajaxCall("GET", "../api/Campaign", "", getSuccess1, error);
+            redrawTable(tbl, campdata);
             buttonEvents(); // after redrawing the table, we must wire the new buttons
             $("#editDiv").hide();
             swal("Deleted Successfuly!", "Great Job", "success");
@@ -239,9 +261,9 @@
 
         // this function is activated in case of a success
         function getSuccess(campdata) {
-            cars = campdata; // keep the cars array in a global variable;
+            camps = campdata; // keep the cars array in a global variable;
             console.log(campdata)
-      
+
 
             try {
                 tbl = $('#camptable').DataTable({
@@ -250,7 +272,7 @@
                     columns: [
                         {
                             render: function (data, type, row, meta) {
-                                let dataCamp = "data-carId='" + row.Id + "'";
+                                let dataCamp = "data-campId='" + row.Id + "'";
 
                                 editBtn = "<button type='button' class = 'editBtn btn btn-success' " + dataCamp + "> Edit Budget </button>";
                                 viewBtn = "<button type='button' class = 'viewBtn btn btn-info' " + dataCamp + "> View </button>";
@@ -258,7 +280,7 @@
                                 return editBtn + viewBtn + deleteBtn;
                             }
                         },
-              
+
                         { data: "Id" },
                         { data: "Rest_name" },
                         { data: "Budget" },
@@ -269,14 +291,14 @@
                             data: "Status",
                             visible: false
                         }
-                       
+
                     ],
                 });
 
             }
 
             catch (err) {
-                
+
                 alert(err);
             }
         }
@@ -287,7 +309,7 @@
         }
 
     </script>
-
+    
 </head>
 <body>
 
@@ -322,49 +344,59 @@
         <div id="editDiv">
             <form id="campForm">
                 <div class="form-group row">
+                    <div class="form-group col-sm-3">
+                        <label for="Cusin"><span class="red-star">★ </span>Cuisin</label>
+                        <select id="Cuisin" class="form-control" required>
+                            <option value="0">Select Cuisin</option>
+                            <option value="American">American</option>
+                            <option value="Asian">Asian</option>
+                            <option value="Arabian">Arabian</option>
+                            <option value="Desserts">Desserts</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Oriental">Oriental</option>
+                        </select>
+                    </div>
 
                     <div class="form-group col-sm-3">
                         <label for="Restaurant"><span class="red-star">★ </span>Restaurant</label>
-                        <select id="year" class="form-control" required>
-                            <option value="">Choose Year</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
+                        <select id="Restaurant" class="form-control" required>
+                            <option value="0">Select Resaurant</option>
+
+
                         </select>
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="Budget"><span class="red-star">★ </span>Budget</label>
-                        <input type="text" class="form-control" id="Budget" placeholder="Enter the Campaign Budget" required>
+                        <input type="number" class="form-control" id="Budget" placeholder="Enter the Campaign Budget" required>
                     </div>
 
 
                     <div class="form-group col-sm-3">
                         <label for="Balance"><span class="red-star">★ </span>Balance</label>
-                        <input type="number" class="form-control" id="Balance" placeholder="Balance" required>
+                        <input type="number" class="form-control" value=0 id="Balance" placeholder="Balance" required>
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="Clicks"><span class="red-star">★ </span>Clicks</label>
-                        <input type="number" class="form-control" id="Clicks" placeholder="Clicks" required>
+                        <input type="number" class="form-control" value=0 id="Clicks" placeholder="Clicks" required>
                     </div>
 
 
 
                     <div class="form-group col-sm-3">
                         <label for="Views"><span class="red-star">★ </span>Views</label>
-                        <input type="number" class="form-control" id="views" placeholder="Views" required />
+                        <input type="number" class="form-control" value=0  id="Views" placeholder="Views" required />
                     </div>
 
 
                 </div>
 
 
-                
 
 
-                <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button>
-                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
-            </form>
+
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">Save</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="Cancel" />
+</form>
         </div>
 
     </div>

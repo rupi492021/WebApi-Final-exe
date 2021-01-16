@@ -267,12 +267,12 @@ public class DBServices
     private String BuildUpdateCommand(int id, int budget)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id_rest = " +id+ "; ";
+        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id = " +id+ "; ";
         return command;
     }
 
     //Delete Campaign by id - change status to false
-    public int DeleteCampain(int id, bool? status)
+    public int DeleteCampain(int id)
     {
 
         SqlConnection con;
@@ -288,7 +288,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildUpdateCommand(id, status);      // helper method to build the insert string
+        String cStr = BuildUpdateCommand(id);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -314,10 +314,10 @@ public class DBServices
 
     }
     //--------------------------------------------------------------------
-    private String BuildUpdateCommand(int id, bool? status)
+    private String BuildUpdateCommand(int id)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET status = '" + status + "' WHERE id_rest = " + id + "; ";
+        command = "UPDATE campaingn_2021 SET status = 'False' WHERE id = " + id + "; ";
         return command;
     }
 

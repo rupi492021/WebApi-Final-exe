@@ -38,19 +38,19 @@ namespace resturantwebApp.Controllers
         }
 
         // PUT api/<controller>/5
-        public int Put(int id, int budget)
+        public int Put([FromBody]Campaign campaign)
         {
-            Campaign campaign = new Campaign();
-            return campaign.Update_Budget(id, budget); 
+            
+            return campaign.Update_Budget(campaign.Id, campaign.Budget); 
         }
 
         // PUT api/<controller>/5
         [HttpPut]
-        [Route("api/Campaign/{id}/{status}")]
-        public int Put(int id, bool? status)
+        [Route("api/Campaign/{id}")]
+        public int Put(int id)
         {
             Campaign campaign = new Campaign();
-            return campaign.DeleteCampain(id, status);
+            return campaign.DeleteCampain(id);
         }
 
         // DELETE api/<controller>/5
