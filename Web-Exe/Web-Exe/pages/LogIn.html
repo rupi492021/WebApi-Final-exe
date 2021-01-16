@@ -1,11 +1,69 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <title>Log In</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript"></script>
+    <style type="text/css"></style>
+    <script>
+
+        $(document).ready(function () {
+            $("#pform").submit(log);
+
+        });
+
+
+        function log() {
+            let mail = $("#email").val();
+            let pass = $("#password").val();
+            console.log(mail);
+            console.log(pass);
+            let api = "../api/Customer?mail=" + mail + "&password=" + pass;
+            ajaxCall("get", api, "", getSuccess, getError)
+            // e.preventDefault();
+            return false;
+        }
+
+        function getSuccess(data) {
+            if (data != 0)
+                window.location = "Home.html";
+            else
+                console.log("Error");
+        }
+
+        function getError() {
+            console.log("error");
+        }
+
+    </script>
+
 </head>
 <body>
-    <h1>Mail:</h1>
+    <div id="container">
+        <form id="pform">
+            <h1>Log In</h1>
+            <div class="form-group">
+                <label for="uname">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter the your Email" required />
+            </div>
+            <div class="form-group">
+                <label for="manufacturerTB">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter the Password at list 8 chars include 1 Capital Letter and 1 digit" required
+                       pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
+                       oninvalid="this.setCustomValidity('Enter the Password 1 Capital Letter 1 digit')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div>
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
