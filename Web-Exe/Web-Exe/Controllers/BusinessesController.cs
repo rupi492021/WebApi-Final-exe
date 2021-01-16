@@ -20,6 +20,7 @@ namespace cuisin.Controllers
         }
 
         [HttpGet]
+        [ActionName("GetBusinesses")]
         [Route("api/Businesses/{category}")]
         public List<Businesses> Get(string category)
         {
@@ -28,6 +29,15 @@ namespace cuisin.Controllers
             return bList;
         }
 
+        [HttpGet]
+        [ActionName("GetBusines")]
+        [Route("api/Businesses/GetPromot/{category}")]
+        public List<Businesses> GetPromot(string category)
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.ReadPromot(category);
+            return bList;
+        }
 
         // GET api/<controller>/5
         public string Get(int id)

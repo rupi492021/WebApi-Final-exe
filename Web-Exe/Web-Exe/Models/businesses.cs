@@ -52,5 +52,12 @@ namespace cuisin.Models
             return bList;
         }
 
+        public List<Businesses> ReadPromot(string category)
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getPromot(category);
+            return bList;
+        }
+
     }
 }

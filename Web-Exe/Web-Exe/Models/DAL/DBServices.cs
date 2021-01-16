@@ -383,7 +383,7 @@ public class DBServices
 
 
 
-    //Get all resturant Data
+    //Get all resturant Data for unknown user
     public List<Businesses> getBusinesses(string category = null)
     {
         SqlConnection con = null;
@@ -394,7 +394,15 @@ public class DBServices
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
             if (category == null)
             {
-                selectSTR = "select * from Restaurants_2021";
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "from Restaurants_2021 as Re " +
+                        "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
+                        "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
+                        "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating ", category);
+                selectSTR = sb.ToString();
             }
             else
             {
@@ -462,6 +470,66 @@ public class DBServices
     }
 
 
+    //Get Promot Resturant for unknown user getPromot
+    public List<Businesses> getPromot(string category)
+    {
+        SqlConnection con = null;
+        List<Businesses> bList = new List<Businesses>();
+        string selectSTR = null;
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+          
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image "+
+                                "from Restaurants_2021 as Re " +
+                                "inner join campaingn_2021 as ca on Re.id = ca.id_rest " +
+                                "where category like '%{0}%'", category);
+                selectSTR = sb.ToString();
+            
+
+
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            List<Businesses> Unique_list = new List<Businesses>();
+            List<int> Id_list = new List<int>();
+            while (dr.Read())
+            {  
+                Businesses B = new Businesses();
+                B.Id = Convert.ToInt32(dr["id"]);
+                B.Name = (string)dr["name"];
+                B.User_rating = Convert.ToDouble(dr["user_rating"]);
+                B.Category = (string)dr["category"];
+                B.Price_range = Convert.ToInt32(dr["price_range"]);
+                B.Location = (string)dr["location"];
+                B.Phone_numbers = (string)dr["phone_numbers"];
+                B.Featured_image = (string)dr["featured_image"];
+
+                bList.Add(B);
+
+
+            }
+
+            return bList;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
 
     //Get all Campaingns Data
     public List<Campaign> getcampaingns()
