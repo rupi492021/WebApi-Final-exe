@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            width: 100%;
+            height: 450PX;
+            background-image: url('../imgs/img_res.png');
+            background-size: 100% 100%;
+            color: aliceblue;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #logo_text {
+            padding-top: 150px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            font-size: 1.8rem;
+            text-align: right;
+            vertical-align: middle;
+            font-weight: 300;
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            border-radius: 0.6rem;
+            padding: 0.8rem !important;
+            text-decoration: none;
+        }
+
+        .search {
+            text-align: center;
+        }
+
+        #sl {
+            width: 150px;
+            height: 30Px;
+        }
+
+        .res {
+            display: inline-block;
+            margin: 2px;
+            width: 400px;
+            text-align: center;
+            border: 1px solid gray;
+        }
+
+        h3 {
+            font-size: 16px;
+        }
+    </style>
+
+    <script>
+
+
+
+        $(document).ready(function () {
+            $("#sl").change(render);
+
+        });
+
+        function getError() {
+            console.log("error");
+        }
+
+        function getSuccess(data) {
+            console.log(data);
+            let str = "";
+            for (i = 0; i < data.length; i++) {
+
+                str += '<div class="res">';
+                str += "<img src=\"" + data[i].Featured_image + "\" height=\"100px\" width=\"100px\"/> <br/>";
+                str += "<h3> Id:" + data[i].Id + "</h3>";
+                str += "<h3> Name:" + data[i].Name + "</h3>";
+                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
+                str += "<h3> Category:" + data[i].Category + "</h3>";
+                str += "<h3> Price Range:" + data[i].Price_range + "</h3>";
+                str += "<h3> Location:" + data[i].Location + "</h3>";
+                str += "<h3> Phone Numbers:" + data[i].Phone_numbers + "</h3>";
+                str += '</div>';
+
+
+            }
+            $("#Ph").html(str);
+
+
+        }
+        function render() {
+            let category = $("#sl").find(":selected").text();
+            ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div id="main">
+            <div id="Bar">
+                <a href="">Updating Preferences</a>
+                <a href="Login.html">Login</a>
+                <a href="Sign_up.html">Singup</a>
+                <a href="">Logout</a>
+            </div>
+            <div id="logo_text">
+                <h1>FindRest</h1>
+                <h2>
+                    The largest restaurant search site in the world <br />
+                    please choose a category
+                </h2>
+            </div>
+            <div class="search">
+                <select id="sl">
+                    <option value="0"></option>
+                    <option value="1">American</option>
+                    <option value="3">Asian</option>
+                    <option value="4">Arabian</option>
+                    <option value="5">Desserts</option>
+                    <option value="25">Chinese</option>
+                    <option value="10">Oriental</option>
+                    <option value="148">Indian</option>
+                    <option value="156">Greek</option>
+                    <option value="218">Israeli</option>
+                    <option value="45">French</option>
+                    <option value="73">mexican</option>
+                    <option value="95">thai</option>
+                    <option value="55">italian</option>
+                </select>
+            </div>
+        </div>
+        <div id="Ph">
+
+        </div>
+    </div>
+
+</body>
+</html>
