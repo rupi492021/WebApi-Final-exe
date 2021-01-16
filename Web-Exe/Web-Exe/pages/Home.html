@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <script src="../Scripts/jquery-3.4.1.min.js"></script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript"></script>
     <style type="text/css">
@@ -68,11 +68,57 @@
     <script>
 
 
-
         $(document).ready(function () {
             $("#sl").change(render);
+            ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
+
 
         });
+        // give attribute to resturant
+        function getSuccessAtr(data) {
+            let count = 0;
+            let list = [];
+            for (i = 0; i < data.length; i++) {
+                var rand = Math.floor((Math.random() * 10) + 1);
+                if (count == 3) {
+                    count = 0;
+                    list = [];
+                    
+                }
+                else {
+                    if (list.includes(rand)) { }
+                    else {
+                        Attribute = {
+                            Id_attr: rand,
+                            Id_rest: data[i].Id
+                        }
+                        count++;
+                        list.push(rand);
+                        ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
+                    }
+
+                }
+            }
+        }
+        function postSuccess(data) {
+            console.log(data);
+        }
+
+        function postError() {
+            console.log("Error");
+        }
+
+
+        function getErrorAtr() {
+            console.log("error");
+
+        }
+
+        //render resturant by category
+        function render() {
+            let category = $("#sl").find(":selected").text();
+            ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+        }
 
         function getError() {
             console.log("error");
@@ -97,12 +143,8 @@
 
             }
             $("#Ph").html(str);
-        //changeefef
-            //sdfs
-        }
-        function render() {
-            let category = $("#sl").find(":selected").text();
-            ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+
+
         }
 
 
