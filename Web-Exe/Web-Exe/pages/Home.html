@@ -70,49 +70,50 @@
 
         $(document).ready(function () {
             $("#sl").change(render);
-            ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
+           // ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
 
 
         });
-        // give attribute to resturant
-        function getSuccessAtr(data) {
-            let count = 0;
-            let list = [];
-            for (i = 0; i < data.length; i++) {
-                var rand = Math.floor((Math.random() * 10) + 1);
-                if (count == 3) {
-                    count = 0;
-                    list = [];
+        //// give attribute to resturant
+        //function getSuccessAtr(data) {
+        //    let count = 0;
+        //    let list = [];
+        //    for (i = 0; i < data.length; ) {
+        //        var rand = Math.floor((Math.random() * 10) + 1);
+        //        if (count == 3) {
+        //            count = 0;
+        //            list = [];
+        //            i++;
                     
-                }
-                else {
-                    if (list.includes(rand)) { }
-                    else {
-                        Attribute = {
-                            Id_attr: rand,
-                            Id_rest: data[i].Id
-                        }
-                        count++;
-                        list.push(rand);
-                        ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
-                    }
+        //        }
+        //        else {
+        //            if (list.includes(rand)) { }
+        //            else {
+        //                Attribute = {
+        //                    Id_attr: rand,
+        //                    Id_rest: data[i].Id
+        //                }
+        //                count++;
+        //                list.push(rand);
+        //                ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
+        //            }
 
-                }
-            }
-        }
-        function postSuccess(data) {
-            console.log(data);
-        }
+        //        }
+        //    }
+        //}
+        //function postSuccess(data) {
+        //    console.log(data);
+        //}
 
-        function postError() {
-            console.log("Error");
-        }
+        //function postError() {
+        //    console.log("Error");
+        //}
 
 
-        function getErrorAtr() {
-            console.log("error");
+        //function getErrorAtr() {
+        //    console.log("error");
 
-        }
+        //}
 
         //render resturant by category
         function render() {
