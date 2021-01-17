@@ -52,59 +52,62 @@ public class DBServices
 
     //Insert New Customer 
     public int Insert(Customer customer)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
         {
-
-            SqlConnection con;
-            SqlCommand cmd;
-
-            try
-            {
-                con = connect("DBConnectionString"); // create the connection
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
-
-            String cStr = BuildInsertCommand(customer);      // helper method to build the insert string
-
-            cmd = CreateCommand(cStr, con);             // create the command
-
-            try
-            {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
-                return numEffected;
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
-
-            finally
-            {
-                if (con != null)
-                {
-                    // close the db connection
-                    con.Close();
-                }
-            }
-
+            con = connect("DBConnectionString"); // create the connection
         }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(customer);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = Convert.ToInt32(cmd.ExecuteScalar()); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
     //--------------------------------------------------------------------
     private String BuildInsertCommand(Customer customer)
-        {
-            String command;
+    {
+        String command;
+        command = "";
 
-            StringBuilder sb = new StringBuilder();
-            // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}','{2}','{3}', '{4}', '{5}')", customer.Fname, customer.Lname, customer.Mail, customer.Phone, customer.Password, customer.Image); String prefix = "INSERT INTO [Customers_2021] " + "(id,name,user_rating,category,price_range,location,phone_numbers,featured_image )";
-            String prefixc = "INSERT INTO [Customers_2021] " + "([name],[lastname],[email],[phone],[password],[image])";
-            command = prefixc + sb.ToString();
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values('{0}', '{1}','{2}','{3}', '{4}', '{5}');", customer.Fname, customer.Lname, customer.Mail, customer.Phone, customer.Password, customer.Image);
+        String prefixc = "INSERT INTO [Customers_2021] " + "([name],[lastname],[email],[phone],[password],[image])";
+        String get_id = "SELECT SCOPE_IDENTITY();";
+        command = prefixc + sb.ToString() + get_id;
 
-            return command;
-        }
+        return command;
+    }
+
 
 
 
@@ -216,6 +219,63 @@ public class DBServices
         // use a string builder to create the dynamic string
         sb.AppendFormat("Values({0}, {1})", attribute_In_Rest.Id_attr, attribute_In_Rest.Id_rest);
         String prefixc = "INSERT INTO [Attribute_rest_2021] " + "([Id_attribute],[Id_rest])";
+        command = prefixc + sb.ToString();
+
+        return command;
+    }
+
+
+    //Insert Attribute_att_In_cust
+    public int Attribute_att_In_cust(Attribute_In_cust attribute_In_cust)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(attribute_In_cust);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildInsertCommand(Attribute_In_cust attribute_In_cust)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1})", attribute_In_cust.Id_att, attribute_In_cust.Id_cust);
+        String prefixc = "INSERT INTO [Attribute_Cust_2021] " + "([Id_attribute],[Id_cust])";
         command = prefixc + sb.ToString();
 
         return command;
