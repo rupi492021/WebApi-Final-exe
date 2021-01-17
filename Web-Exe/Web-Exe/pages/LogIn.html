@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Log In</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <title>Log In</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
@@ -26,15 +26,16 @@
             console.log(pass);
             let api = "../api/Customer?mail=" + mail + "&password=" + pass;
             ajaxCall("get", api, "", getSuccess, getError)
-            // e.preventDefault();
             return false;
         }
 
         function getSuccess(data) {
             if (data != 0)
                 window.location = "Home.html";
-            else
-                console.log("Error");
+            else 
+                swal("Oops...", "The email address or password is incorrect!", "error");
+
+                    
         }
 
         function getError() {
@@ -60,7 +61,7 @@
                        oninput="this.setCustomValidity('')" />
             </div>
             <div>
-                <input type="submit" value="Log in" />
+                <input type="submit" value="Submit" />
             </div>
         </form>
     </div>

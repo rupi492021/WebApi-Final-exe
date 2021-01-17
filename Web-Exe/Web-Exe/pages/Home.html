@@ -18,7 +18,7 @@
             background-image: url('../imgs/img_res.png');
             background-size: 100% 100%;
             color: aliceblue;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: emoji;
         }
 
         #logo_text {
@@ -41,7 +41,12 @@
             border-radius: 0.6rem;
             padding: 0.8rem !important;
             text-decoration: none;
+            text-shadow: -.25px -.25px 0 black, .25px .25px black;
         }
+
+            a:hover {
+                font-weight: 500;
+            }
 
         .search {
             text-align: center;
@@ -54,14 +59,23 @@
 
         .res {
             display: inline-block;
-            margin: 2px;
             width: 400px;
+            height: 450PX;
             text-align: center;
             border: 1px solid gray;
+            overflow: hidden;
+            margin: 5px;
+            padding: 5px;
+            transform: translate3d(0px, 0px, 0px);
+            border-radius: 20px;
+            margin-left: 30px;
         }
 
         h3 {
             font-size: 16px;
+        }
+
+        #ph_pro {
         }
     </style>
 
@@ -69,70 +83,82 @@
 
 
         $(document).ready(function () {
-            $("#sl").change(render);
-           // ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
+            $("#sl").change(search_category);
+            ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
 
 
         });
-        //// give attribute to resturant
-        //function getSuccessAtr(data) {
-        //    let count = 0;
-        //    let list = [];
-        //    for (i = 0; i < data.length; ) {
-        //        var rand = Math.floor((Math.random() * 10) + 1);
-        //        if (count == 3) {
-        //            count = 0;
-        //            list = [];
-        //            i++;
-                    
-        //        }
-        //        else {
-        //            if (list.includes(rand)) { }
-        //            else {
-        //                Attribute = {
-        //                    Id_attr: rand,
-        //                    Id_rest: data[i].Id
-        //                }
-        //                count++;
-        //                list.push(rand);
-        //                ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
-        //            }
+        // give attribute to resturant
+        function getSuccessAtr(data) {
+            render(data);
+            //let count = 0;
+            //let list = [];
+            //for (i = 0; i < data.length; ) {
+            //    var rand = Math.floor((Math.random() * 10) + 1);
+            //    if (count == 5) {
+            //        count = 0;
+            //        list = [];
+            //        i++;
 
-        //        }
-        //    }
-        //}
-        //function postSuccess(data) {
-        //    console.log(data);
-        //}
+            //    }
+            //    else {
+            //        if (list.includes(rand)) { }
+            //        else {
+            //            Attribute = {
+            //                Id_attr: rand,
+            //                Id_rest: data[i].Id
+            //            }
+            //            count++;
+            //            list.push(rand);
+            //            ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
+            //        }
 
-        //function postError() {
-        //    console.log("Error");
-        //}
+            //    }
+            //}
+        }
+        function getErrorAtr() {
+            console.log("error");
 
+        }
 
-        //function getErrorAtr() {
-        //    console.log("error");
+        function postSuccess(data) {
+            console.log(data);
+        }
 
-        //}
+        function postError() {
+            console.log("Error");
+        }
 
         //render resturant by category
-        function render() {
+        function search_category() {
             let category = $("#sl").find(":selected").text();
             ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+            ajaxCall("get", "../api/Businesses/GetPromot/" + category, "", getSuccessPro, getErrorPro);
+        }
+
+        function getSuccess(data) {
+            render(data);
         }
 
         function getError() {
             console.log("error");
         }
 
-        function getSuccess(data) {
-            console.log(data);
+        function getSuccessPro(data) {
+            renderPro(data);
+        }
+
+        function getErrorPro() {
+            console.log("error");
+        }
+
+        function render(data) {
+            console.log("data");
             let str = "";
             for (i = 0; i < data.length; i++) {
 
-                str += '<div class="res">';
-                str += "<img src=\"" + data[i].Featured_image + "\" height=\"100px\" width=\"100px\"/> <br/>";
-                str += "<h3> Id:" + data[i].Id + "</h3>";
+                str += '<div class="res" style="width: 366px; min-width: 366px; margin-right: 20px;">';
+                str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<h3> Name:" + data[i].Name + "</h3>";
                 str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
                 str += "<h3> Category:" + data[i].Category + "</h3>";
@@ -144,8 +170,27 @@
 
             }
             $("#Ph").html(str);
+        }
+
+        function renderPro(data) {
+            alert("data");
+            let str = "";
+            for (i = 0; i < data.length; i++) {
+
+                str += '<div class="res">';
+                str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
+                str += "<h3> Name:" + data[i].Name + "</h3>";
+                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
+                str += "<h3> Category:" + data[i].Category + "</h3>";
+                str += "<h3> Price Range:" + data[i].Price_range + "</h3>";
+                str += "<h3> Location:" + data[i].Location + "</h3>";
+                str += "<h3> Phone Numbers:" + data[i].Phone_numbers + "</h3>";
+                str += "<h3>  ממומן</h3>";
+                str += '</div>';
 
 
+            }
+            $("#ph_pro").html(str);
         }
 
 
@@ -156,10 +201,11 @@
     <div id="container">
         <div id="main">
             <div id="Bar">
-                <a href="">Updating Preferences</a>
+                <a href="Preferences.html">Updating Preferences</a>
                 <a href="Login.html">Login</a>
                 <a href="Sign_up.html">Singup</a>
                 <a href="">Logout</a>
+
             </div>
             <div id="logo_text">
                 <h1>FindRest</h1>
@@ -187,9 +233,10 @@
                 </select>
             </div>
         </div>
-        <div id="Ph">
+        <div id="ph_pro">***Sponsored area</div>
+        <div id="Ph">***Organic area</div>
 
-        </div>
+
     </div>
 
 </body>
