@@ -394,7 +394,7 @@ public class DBServices
         {
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-            String selectSTR = "select [name],lastname,email,phone,password,[image] from Customers_2021 where email = '" + mail.ToString()+ "' and [password] = '" +password.ToString() + "'";
+            String selectSTR = "select id,[name],lastname,email,phone,password,[image] from Customers_2021 where email = '" + mail.ToString()+ "' and [password] = '" +password.ToString() + "'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
@@ -403,16 +403,15 @@ public class DBServices
             while (dr.Read())
             {   // Read till the end of the data into a row
                 Customer c = new Customer();
-
+                
+                    c.Id= Convert.ToInt32(dr["id"]);
                     c.Fname = (string)dr["name"];
                     c.Lname = (string)dr["lastname"];
                     c.Mail = (string)dr["email"];
                     c.Phone = (string)dr["phone"];
                     c.Password = (string)dr["password"];
 
-
-
-                if (!dr.IsDBNull(5))
+                if (!dr.IsDBNull(6))
                 {
                     c.Image = (string)dr["image"];
                 }

@@ -7,6 +7,7 @@ namespace cuisin.Models
 {
     public class Customer
     {
+        int id;
         string fname;
         string lname;
         string mail;
@@ -14,8 +15,9 @@ namespace cuisin.Models
         string password;
         string image;
 
-        public Customer(string fname, string lname, string mail, string phone, string password, string Image)
+        public Customer(int id, string fname, string lname, string mail, string phone, string password, string Image)
         {
+            Id = id;
             Fname = fname;
             Lname = lname;
             Mail = mail;
@@ -23,7 +25,7 @@ namespace cuisin.Models
             Password = password;
             Image = image;
         }
-
+        public int Id { get => id; set => id = value; }
         public string Fname { get => fname; set => fname = value; }
         public string Lname { get => lname; set => lname = value; }
         public string Mail { get => mail; set => mail = value; }
