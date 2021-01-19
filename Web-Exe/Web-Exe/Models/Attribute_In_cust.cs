@@ -27,6 +27,13 @@ namespace cuisin.Models
         {
             DBServices dbs = new DBServices();
             return dbs.Attribute_att_In_cust(this);
-        } 
+        }
+
+        public List<Attribute_In_cust> Read(int id)
+        {
+            DBServices dbs = new DBServices();
+            List<Attribute_In_cust> attribute_In_Custs = dbs.getattribute_In_Custs(id);
+            return attribute_In_Custs;
+        }
     }
 }

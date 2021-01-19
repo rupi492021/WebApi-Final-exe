@@ -460,7 +460,7 @@ public class DBServices
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
                         "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating ", category);
+                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating DESC ", category);
                 selectSTR = sb.ToString();
             }
             else
@@ -473,7 +473,7 @@ public class DBServices
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
                         "where category like '%{0}%' " +
                         "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating ", category);
+                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating DESC ", category);
                 selectSTR = sb.ToString();
             }
 
@@ -639,9 +639,49 @@ public class DBServices
 
     }
 
+    //Gett attribute by customer id - getattribute_In_Custs
+    public List<Attribute_In_cust> getattribute_In_Custs(int id)
+    {
+        SqlConnection con = null;
+        List<Attribute_In_cust> attribute_In_cust = new List<Attribute_In_cust>();
+
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+            String selectSTR = "select Id_attribute from Attribute_Cust_2021 where id_cust = " + id.ToString();
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Attribute_In_cust C = new Attribute_In_cust();
+
+                C.Id_att = Convert.ToInt32(dr["Id_attribute"]);
+                attribute_In_cust.Add(C);
+            }
+
+            return attribute_In_cust;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
 
 
-    
 
 
 }
