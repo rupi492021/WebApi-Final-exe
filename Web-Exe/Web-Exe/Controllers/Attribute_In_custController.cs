@@ -10,16 +10,21 @@ namespace cuisin.Models
     public class Attribute_In_custController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public IHttpActionResult Get(int id)
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                Attribute_In_cust attribute_In_cust = new Attribute_In_cust();
+                List<Attribute_In_cust> Att_Cust_List = attribute_In_cust.Read(id);
+                return Ok(Att_Cust_List);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
+     
 
         // POST api/<controller>
         public void Post([FromBody]Attribute_In_cust attribute_In_Cust)

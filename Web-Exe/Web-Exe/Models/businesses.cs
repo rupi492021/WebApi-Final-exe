@@ -59,5 +59,18 @@ namespace cuisin.Models
             return bList;
         }
 
+        public List<Businesses> ReadByUser(int[] att_id)
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getBusinessesByUser(att_id);
+            return bList;
+        }
+
+        public List<Businesses> ReadByUser(int[] att_id, string category)
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getBusinessesByUser(att_id, category);
+            return bList;
+        }
     }
 }
