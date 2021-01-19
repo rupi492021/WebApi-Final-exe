@@ -20,7 +20,6 @@ namespace cuisin.Controllers
         }
 
         [HttpGet]
-        [ActionName("GetBusinesses")]
         [Route("api/Businesses/{category}")]
         public List<Businesses> Get(string category)
         {
@@ -30,12 +29,31 @@ namespace cuisin.Controllers
         }
 
         [HttpGet]
-        [ActionName("GetBusines")]
         [Route("api/Businesses/GetPromot/{category}")]
         public List<Businesses> GetPromot(string category)
         {
             Businesses businesses = new Businesses();
             List<Businesses> bList = businesses.ReadPromot(category);
+            return bList;
+        }
+        //[FromUri] int[] categoryIds
+
+
+        [HttpGet]
+        [Route("api/Businesses/Byuser")]
+        public List<Businesses> GetByuser([FromUri] int[] att_id)
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.ReadByUser(att_id);
+            return bList;
+        }
+
+        [HttpGet]
+        [Route("api/Businesses/Byuser/{category}")]
+        public List<Businesses> Get([FromUri] int[] att_id , string category)
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.ReadByUser(att_id, category);
             return bList;
         }
 

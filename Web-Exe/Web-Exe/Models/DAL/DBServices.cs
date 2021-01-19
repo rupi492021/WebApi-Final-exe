@@ -639,7 +639,7 @@ public class DBServices
 
     }
 
-    //Gett attribute by customer id - getattribute_In_Custs
+    //Get attribute by customer id - getattribute_In_Custs
     public List<Attribute_In_cust> getattribute_In_Custs(int id)
     {
         SqlConnection con = null;
@@ -664,6 +664,99 @@ public class DBServices
             }
 
             return attribute_In_cust;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+
+    //Get all resturant data for relevant user getBusinessesByUser
+    public List<Businesses> getBusinessesByUser(int[] att_id, string category = null)
+    {
+        SqlConnection con = null;
+        List<Businesses> bList = new List<Businesses>();
+        string selectSTR = null;
+        string select_att_case = "";
+        foreach (int element in att_id)
+        {
+            select_att_case += "case when Att.Id = " + element.ToString() + " then 0 else 1 end,";
+        }
+
+        select_att_case = select_att_case.Remove(select_att_case.Length - 1);
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            if (category == null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "from Restaurants_2021 as Re " +
+                        "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
+                        "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
+                        "group by  Re.id, Att.Id,Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by {0}" , select_att_case);
+                selectSTR = sb.ToString();
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "from Restaurants_2021 as Re " +
+                        "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
+                        "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
+                        "where category like '%{0}%' " +
+                        "group by  Re.id, Att.Id,Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by {1}", category, select_att_case);
+                selectSTR = sb.ToString();
+            }
+
+
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            List<Businesses> Unique_list = new List<Businesses>();
+            List<int> Id_list = new List<int>();
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Businesses B = new Businesses();
+                B.Id = Convert.ToInt32(dr["id"]);
+                B.Name = (string)dr["name"];
+                B.User_rating = Convert.ToDouble(dr["user_rating"]);
+                B.Category = (string)dr["category"];
+                B.Price_range = Convert.ToInt32(dr["price_range"]);
+                B.Location = (string)dr["location"];
+                B.Phone_numbers = (string)dr["phone_numbers"];
+                B.Featured_image = (string)dr["featured_image"];
+
+                bList.Add(B);
+
+
+            }
+            //filter list only unique items
+            foreach (Businesses value in bList)
+            {
+                if (!Id_list.Contains(value.Id))
+                {
+                    Id_list.Add(value.Id);
+                    Unique_list.Add(value);
+                }
+            }
+
+            return Unique_list;
         }
         catch (Exception ex)
         {
