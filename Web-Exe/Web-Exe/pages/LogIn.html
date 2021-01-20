@@ -30,8 +30,12 @@
         }
 
         function getSuccess(data) {
-            if (data != 0)
+            if (data != 0) {
+
+                console.log(data);
+                localStorage.setItem("ID", data[0].Id);
                 window.location = "Home.html";
+            }
             else 
                 swal("Oops...", "The email address or password is incorrect!", "error");
 

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title> </title>
+    <title>Preferences </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -10,6 +10,7 @@
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
     <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style type="text/css"></style>
     <script>
         $(document).ready(function () {
@@ -17,14 +18,48 @@
             $(".chosen-select").chosen({
                 no_results_text: "Oops, nothing found!"
             });
+
+            $("#BTN").click(function () {
+                updatePreferences();
+                return false;
+            });
+            $
+
+            ajaxCall("get", "../api/Attribute_In_cust/" + localStorage.ID, "", getSuccess, null);
         });
+
+
+        function getSuccess(data) {
+            for (i = 0; i < data.length; i++)
+                $("#sel > option[value=" + data[i].Id_att + "]").prop("selected", true);
+            $(".chosen-select").trigger("chosen:updated");
+        }
+
+        function updatePreferences() {
+            // let l = $("#sel").val();
+            $('#sel > option:selected').each(function () {
+                let Att_customer = {
+                    ID_att: $(this).val(),
+                    ID_cust: localStorage.ID
+                }
+
+                console.log(Att_customer);
+                // ajaxCall("POST", "../api/Attribute_In_cust", JSON.stringify(Att_customer), postattSuccess, postattError);
+
+            });
+
+            swal("Preferences updated!", "Great Job", "success");
+            window.location = "Home.html";
+
+
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <form id="pForm">
             <div class="form-group">
-                <label for="LABpre"><span class="red-star">★ </span> Choose Prefrences </label>
+                <label for="LABpre"> Choose Prefrences </label>
                 <!--<input type="text" class="form-control" id="pre" required>-->
                 <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
                     <option value=""></option>
@@ -40,7 +75,7 @@
                     <option value="10">Delivery</option>
                 </select>
             </div>
-            <input type="submit" value="Submit" />
+            <input type="button" id="BTN" value="Update" />
         </form>
     </div>
 </body>

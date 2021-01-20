@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript"></script>
     <style type="text/css">
         body {
@@ -81,59 +82,105 @@
 
     <script>
 
+        var id;
+        var uri="";
+        var Attrlist = [];
 
         $(document).ready(function () {
-            $("#sl").change(search_category);
-            ajaxCall("get", "../api/Businesses", "", getSuccessAtr, getErrorAtr);
+            if (localStorage.length == 0) {
+                $("#Bar").html('<a href="Login.html">Login</a><a href="Sign_up.html">Singup</a>');
+                $("#sl").change(search_category);
+                ajaxCall("get", "../api/Businesses/", "", getSuccessAtr, getErrorAtr);
+            }
+            else {
+                $("#Bar").html('<a href="Preferences.html">Updating Preferences</a><a href="" id="logout">Logout</a>');
+                $("#sl").change(search_categoryByUser);
+                id = localStorage.getItem('ID');
+                ajaxCall("get", "../api/Attribute_In_cust/" + id, "", getSuccessAtrcust, getErrorAtrcust);
+            }
 
+            $("#logout").click(function(){
+                localStorage.removeItem('ID');
+            });
 
         });
         // give attribute to resturant
         function getSuccessAtr(data) {
             render(data);
-            //let count = 0;
-            //let list = [];
-            //for (i = 0; i < data.length; ) {
-            //    var rand = Math.floor((Math.random() * 10) + 1);
-            //    if (count == 5) {
-            //        count = 0;
-            //        list = [];
-            //        i++;
-
-            //    }
-            //    else {
-            //        if (list.includes(rand)) { }
-            //        else {
-            //            Attribute = {
-            //                Id_attr: rand,
-            //                Id_rest: data[i].Id
-            //            }
-            //            count++;
-            //            list.push(rand);
-            //            ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
-            //        }
-
-            //    }
-            //}
         }
+        //    let count = 0;
+        //    let list = [];
+        //    for (i = 0; i < data.length; ) {
+        //        var rand = Math.floor((Math.random() * 10) + 1);
+        //        if (count == 5) {
+        //            count = 0;
+        //            list = [];
+        //            i++;
+
+        //        }
+        //        else {
+        //            if (list.includes(rand)) { }
+        //            else {
+        //                Attribute = {
+        //                    Id_attr: rand,
+        //                    Id_rest: data[i].Id
+        //                }
+        //                count++;
+        //                list.push(rand);
+        //                ajaxCall("POST", "../api/Attribute_In_rest", JSON.stringify(Attribute), postSuccess, postError)
+        //            }
+
+        //        }
+        //    }
+        //}
         function getErrorAtr() {
             console.log("error");
 
         }
 
-        function postSuccess(data) {
-            console.log(data);
-        }
+        //function postSuccess(data) {
+        //    console.log(data);
+        //}
 
-        function postError() {
-            console.log("Error");
-        }
+        //function postError() {
+        //    console.log("Error");
+        //}
 
         //render resturant by category
+
+        function getSuccessAtrcust(data) {
+            Attrlist = data;
+            for (i = 0; i < Attrlist.length; i++) {
+                if (i == 0) 
+                    uri += "att_id=" + Attrlist[i].Id_att;
+                else
+                    uri += "att_id=" + Attrlist[i].Id_att;
+                if ((i + 1) != Attrlist.length)
+                    uri += "&";
+            }
+            console.log(uri);
+            ajaxCall("get", "../api/Businesses/Byuser?" + uri, "", getSuccessAtrrand, getErrorAttrand);
+        }
+        function getSuccessAtrrand(data) {
+            render(data);
+        }
+        function getErrorAttrand() { }
+
+        function getErrorAtrcust() {
+
+        }
+
         function search_category() {
             let category = $("#sl").find(":selected").text();
             ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+            console.log(category);
             ajaxCall("get", "../api/Businesses/GetPromot/" + category, "", getSuccessPro, getErrorPro);
+        }
+        function search_categoryByUser() {
+            let category = $("#sl").find(":selected").text();
+            //  let api = category + "?attr_id=" + Attrlist[0] + "&attr_id=" + Attrlist[1] + "&attr_id="+Attrlist[2];
+            ajaxCall("get", "../api/Businesses/" + category + "?" + uri, "", getSuccess, getError);
+            ajaxCall("get", "../api/Businesses/GetPromotByUser/" + category + "?" + uri, "", getSuccessPro, getErrorPro);
         }
 
         function getSuccess(data) {
@@ -191,24 +238,16 @@
 
             }
             $("#ph_pro").html(str);
+
+
         }
-
-
 
     </script>
 </head>
-
-
 <body>
     <div id="container">
         <div id="main">
-            <div id="Bar">
-                <a href="Preferences.html">Updating Preferences</a>
-                <a href="Login.html">Login</a>
-                <a href="Sign_up.html">Singup</a>
-                <a href="">Logout</a>
-
-            </div>
+            <div id="Bar"></div>
             <div id="logo_text">
                 <h1>FindRest</h1>
                 <h2>
