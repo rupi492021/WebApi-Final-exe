@@ -62,7 +62,8 @@
         .res {
             display: inline-block;
             width: 400px;
-            height: 450PX;
+            /*height: 450PX;*/
+            min-height: 350px;
             text-align: center;
             border: 1px solid gray;
             overflow: hidden;
@@ -83,9 +84,12 @@
             font-size: 16px;
         }
 
-        #ph_pro {
+        input[type=button] {
+            border: 1px solid gray;
+            background-color: #d7ecf5;
+            border-radius: 20px;
         }
-        .erea {
+        .area {
             font-size: 20px;
             text-align: center;
             border: 1px solid gray;
@@ -101,6 +105,7 @@
         var Attrlist = [];
 
         $(document).ready(function () {
+            $(".area").hide();
             if (localStorage.length == 0) {
                 $("#Bar").html('<a href="Login.html">Login</a><a href="Sign_up.html">Singup</a>');
                 $("#sl").change(search_category);
@@ -155,6 +160,14 @@
         function getErrorAtr() {
             console.log("error");
 
+        }
+
+        function viewinfo() {
+            console.log($(this));
+            id = $(this).attr('id');
+            id = id.split('btn')[1];
+            $(this).hide();
+            $("#" + id).show();
         }
 
         //function postSuccess(data) {
@@ -219,27 +232,33 @@
         }
 
         function render(data) {
-            console.log("data");
+            if (data.length)
+                $("#organic").show();
             let str = "";
             for (i = 0; i < data.length; i++) {
 
                 str += '<div class="res" style="width: 366px; min-width: 366px; margin-right: 20px;">';
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<h3> Name:" + data[i].Name + "</h3>";
-                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
                 str += "<h3> Category:" + data[i].Category + "</h3>";
+                str += "<input type='button' value='More info' id='btn" + data[i].Id + "' />";
+                str += "<div id='" + data[i].Id + "' style='display:none'>";
+                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
                 str += "<h3> Price Range:" + data[i].Price_range + "</h3>";
                 str += "<h3> Location:" + data[i].Location + "</h3>";
                 str += "<h3> Phone Numbers:" + data[i].Phone_numbers + "</h3>";
+                str += '</div>';
                 str += '</div>';
 
 
             }
             $("#Ph").html(str);
+            $('.res > input[type=button]').click(viewinfo);
         }
 
         function renderPro(data) {
-            alert("data");
+            if (data.length)
+                $("#promo").show();
             let str = "";
             for (i = 0; i < data.length; i++) {
 
@@ -257,7 +276,7 @@
 
             }
             $("#ph_pro").html(str);
-
+            $('.res > input[type=button]').click(viewinfo);
 
         }
 
@@ -293,9 +312,9 @@
                 </select>
             </div>
         </div>
-        <h3 class="erea">Sponsored area</h3>
+        <h3 class="area" id="promo">Sponsored area</h3>
         <div id="ph_pro"></div>
-        <h3 class="erea">Organic area</h3>
+        <h3 class="area" id="organic">Organic area</h3>
         <div id="Ph"></div>
 
 
