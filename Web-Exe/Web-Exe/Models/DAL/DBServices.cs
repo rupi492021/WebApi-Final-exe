@@ -160,8 +160,8 @@ public class DBServices
 
         StringBuilder sb = new StringBuilder();
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values({0}, {1}, {2}, {3}, {4}, '{5}')", campaign.Id_rest, campaign.Budget, campaign.Amount_use, campaign.Num_clicks, campaign.Num_views, campaign.Status);
-        String prefixc = "INSERT INTO [campaingn_2021] " + "([id_rest],[budget],[amount_use],[num_clicks],[num_views],[status])";
+        sb.AppendFormat("Values({0}, {1}, {2}, {3}, {4}, '{5}')", campaign.Id_rest, campaign.Budget, campaign.Balance, campaign.Num_clicks, campaign.Num_views, campaign.Status);
+        String prefixc = "INSERT INTO [campaingn_2021] " + "([id_rest],[budget],[balance],[num_clicks],[num_views],[status])";
         command = prefixc + sb.ToString();
 
         return command;
@@ -325,10 +325,10 @@ public class DBServices
 
     }
     //--------------------------------------------------------------------
-    private String BuildUpdateCommand(int id, int budget)
+    private String BuildUpdateCommand(int id, int difference)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id = " +id+ "; ";
+        command = "UPDATE campaingn_2021 SET budget = budget + " + difference + " ,balance = balance + " + difference + " WHERE id = " +id+ "; ";
         return command;
     }
 
@@ -378,7 +378,7 @@ public class DBServices
     private String BuildUpdateCommand(int id)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET status = 'False' WHERE id = " + id + "; ";
+        command = "UPDATE campaingn_2021 SET status = 'False',balance = budget, num_clicks = 0,num_views=0 WHERE id = " + id + "; ";
         return command;
     }
 
@@ -627,7 +627,7 @@ public class DBServices
                 C.Id_rest = Convert.ToInt32(dr["id_rest"]);
                 C.Rest_name = (string)(dr["name"]);
                 C.Budget = Convert.ToInt32(dr["budget"]);
-                C.Amount_use = Convert.ToDouble((dr["amount_use"]));
+                C.Balance = Convert.ToDouble((dr["balance"]));
                 C.Num_clicks = Convert.ToInt32(dr["num_clicks"]);
                 C.Num_views = Convert.ToInt32(dr["num_views"]);
                 C.Status = Convert.ToBoolean(dr["status"]);
@@ -869,5 +869,54 @@ public class DBServices
     }
 
 
+    //Campaign was clicked- update campaign
+    public int CampaignClick(int id)
+    {
 
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildComm_AfterClicked(id);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = Convert.ToInt32(cmd.ExecuteScalar());// execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildComm_AfterClicked(int id)
+    {
+        String command;
+        command = "UPDATE campaingn_2021 SET num_clicks = num_clicks + 1,balance = balance - 0.5 WHERE id = " + id.ToString() + " " +
+                  "select balance from campaingn_2021 where id = " + id.ToString();
+        return command;
+    }
 }
