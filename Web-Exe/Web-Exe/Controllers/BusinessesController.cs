@@ -36,7 +36,7 @@ namespace cuisin.Controllers
             List<Businesses> bList = businesses.ReadPromot(category);
             return bList;
         }
-        //[FromUri] int[] categoryIds
+ 
 
 
         [HttpGet]
@@ -56,6 +56,18 @@ namespace cuisin.Controllers
             List<Businesses> bList = businesses.ReadByUser(att_id, category);
             return bList;
         }
+
+
+        [HttpGet]
+        [Route("api/Businesses/GetPromotByUser/{category}")]
+        public List<Businesses> GetPromotByUser([FromUri] int[] att_id, string category)
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.ReadPromotByUser(att_id, category);
+            return bList;
+        }
+
+
 
         // GET api/<controller>/5
         public string Get(int id)

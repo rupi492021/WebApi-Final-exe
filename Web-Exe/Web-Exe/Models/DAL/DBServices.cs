@@ -160,8 +160,8 @@ public class DBServices
 
         StringBuilder sb = new StringBuilder();
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values({0}, {1}, {2}, {3}, {4}, '{5}')", campaign.Id_rest, campaign.Budget, campaign.Amount_use, campaign.Num_clicks, campaign.Num_views, campaign.Status);
-        String prefixc = "INSERT INTO [campaingn_2021] " + "([id_rest],[budget],[amount_use],[num_clicks],[num_views],[status])";
+        sb.AppendFormat("Values({0}, {1}, {2}, {3}, {4}, '{5}')", campaign.Id_rest, campaign.Budget, campaign.Balance, campaign.Num_clicks, campaign.Num_views, campaign.Status);
+        String prefixc = "INSERT INTO [campaingn_2021] " + "([id_rest],[budget],[balance],[num_clicks],[num_views],[status])";
         command = prefixc + sb.ToString();
 
         return command;
@@ -325,10 +325,10 @@ public class DBServices
 
     }
     //--------------------------------------------------------------------
-    private String BuildUpdateCommand(int id, int budget)
+    private String BuildUpdateCommand(int id, int difference)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET budget = " + budget + " WHERE id = " +id+ "; ";
+        command = "UPDATE campaingn_2021 SET budget = budget + " + difference + " ,balance = balance + " + difference + " WHERE id = " +id+ "; ";
         return command;
     }
 
@@ -378,7 +378,7 @@ public class DBServices
     private String BuildUpdateCommand(int id)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET status = 'False' WHERE id = " + id + "; ";
+        command = "UPDATE campaingn_2021 SET status = 'False',balance = budget, num_clicks = 0,num_views=0 WHERE id = " + id + "; ";
         return command;
     }
 
@@ -459,8 +459,8 @@ public class DBServices
                         "from Restaurants_2021 as Re " +
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
-                        "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating DESC ", category);
+                        "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
                 selectSTR = sb.ToString();
             }
             else
@@ -472,8 +472,8 @@ public class DBServices
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
                         "where category like '%{0}%' " +
-                        "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by case when Att.[name] = 'Wifi' then 0 else 1 end,Re.price_range,Re.user_rating DESC ", category);
+                        "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
                 selectSTR = sb.ToString();
             }
 
@@ -543,8 +543,12 @@ public class DBServices
 
                 sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image "+
                                 "from Restaurants_2021 as Re " +
+                                "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
+                                "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id "+
                                 "inner join campaingn_2021 as ca on Re.id = ca.id_rest " +
-                                "where category like '%{0}%'", category);
+                                "where category like '%{0}%' and ca.[status] = 1 " +
+                                "group by  Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                                "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
                 selectSTR = sb.ToString();
             
 
@@ -571,8 +575,17 @@ public class DBServices
 
 
             }
+            //filter list only unique items
+            foreach (Businesses value in bList)
+            {
+                if (!Id_list.Contains(value.Id))
+                {
+                    Id_list.Add(value.Id);
+                    Unique_list.Add(value);
+                }
+            }
 
-            return bList;
+            return Unique_list;
         }
         catch (Exception ex)
         {
@@ -614,7 +627,7 @@ public class DBServices
                 C.Id_rest = Convert.ToInt32(dr["id_rest"]);
                 C.Rest_name = (string)(dr["name"]);
                 C.Budget = Convert.ToInt32(dr["budget"]);
-                C.Amount_use = Convert.ToDouble((dr["amount_use"]));
+                C.Balance = Convert.ToDouble((dr["balance"]));
                 C.Num_clicks = Convert.ToInt32(dr["num_clicks"]);
                 C.Num_views = Convert.ToInt32(dr["num_views"]);
                 C.Status = Convert.ToBoolean(dr["status"]);
@@ -774,7 +787,136 @@ public class DBServices
 
     }
 
+    //Get Promot Resturant for user getPromotBusinessesByUser
+    public List<Businesses> getPromotBusinessesByUser(int[] att_id, string category)
+    {
+        SqlConnection con = null;
+        List<Businesses> bList = new List<Businesses>();
+        string selectSTR = null;
+        string select_att_case = "";
+        foreach (int element in att_id)
+        {
+            select_att_case += "case when Att.Id = " + element.ToString() + " then 0 else 1 end,";
+        }
+
+        select_att_case = select_att_case.Remove(select_att_case.Length - 1);
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("select Re.id, Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "from Restaurants_2021 as Re " +
+                        "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
+                        "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
+                        "inner join campaingn_2021 as ca on Re.id = ca.id_rest " +
+                        "where category like '%{0}%' and ca.[status] = 1 " +
+                        "group by Re.id, Att.Id,Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
+                        "order by {1}", category, select_att_case);
+                selectSTR = sb.ToString();
+         
 
 
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
 
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            List<Businesses> Unique_list = new List<Businesses>();
+            List<int> Id_list = new List<int>();
+            while (dr.Read())
+            {   // Read till the end of the data into a row
+                Businesses B = new Businesses();
+                B.Id = Convert.ToInt32(dr["id"]);
+                B.Name = (string)dr["name"];
+                B.User_rating = Convert.ToDouble(dr["user_rating"]);
+                B.Category = (string)dr["category"];
+                B.Price_range = Convert.ToInt32(dr["price_range"]);
+                B.Location = (string)dr["location"];
+                B.Phone_numbers = (string)dr["phone_numbers"];
+                B.Featured_image = (string)dr["featured_image"];
+
+                bList.Add(B);
+
+
+            }
+            //filter list only unique items
+            foreach (Businesses value in bList)
+            {
+                if (!Id_list.Contains(value.Id))
+                {
+                    Id_list.Add(value.Id);
+                    Unique_list.Add(value);
+                }
+            }
+
+            return Unique_list;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+
+
+    //Campaign was clicked- update campaign
+    public int CampaignClick(int id)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildComm_AfterClicked(id);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = Convert.ToInt32(cmd.ExecuteScalar());// execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildComm_AfterClicked(int id)
+    {
+        String command;
+        command = "UPDATE campaingn_2021 SET num_clicks = num_clicks + 1,balance = balance - 0.5 WHERE id = " + id.ToString() + " " +
+                  "select balance from campaingn_2021 where id = " + id.ToString();
+        return command;
+    }
 }
