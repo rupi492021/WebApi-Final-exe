@@ -72,5 +72,12 @@ namespace cuisin.Models
             List<Businesses> bList = dbs.getBusinessesByUser(att_id, category);
             return bList;
         }
+
+        public List<Businesses> ReadPromotByUser(int[] att_id, string category)
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getPromotBusinessesByUser(att_id, category);
+            return bList;
+        }
     }
 }
