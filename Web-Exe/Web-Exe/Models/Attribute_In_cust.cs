@@ -27,6 +27,12 @@ namespace cuisin.Models
         {
             DBServices dbs = new DBServices();
             return dbs.Attribute_att_In_cust(this);
+        }    
+        
+        public int Update()
+        {
+            DBServices dbs = new DBServices();
+            return dbs.Attribute_att_In_cust_Update(this);
         }
 
         public List<Attribute_In_cust> Read(int id)

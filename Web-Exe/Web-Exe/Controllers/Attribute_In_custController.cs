@@ -33,8 +33,10 @@ namespace cuisin.Models
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody]Attribute_In_cust attribute_In_Cust)
         {
+            attribute_In_Cust.Update();
+
         }
 
         // DELETE api/<controller>/5

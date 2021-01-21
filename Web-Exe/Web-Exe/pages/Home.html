@@ -12,6 +12,7 @@
         body {
             margin: 0;
             padding: 0;
+            background-color: #f9f9f9;
         }
 
         #main {
@@ -21,6 +22,15 @@
             background-size: 100% 100%;
             color: aliceblue;
             font-family: -webkit-pictograph;
+        }
+
+        a:hover {
+            font-weight: bold;
+            color: #d7ecf5;
+        }
+
+        #results {
+            text-align: center;
         }
 
         #logo_text {
@@ -65,7 +75,7 @@
             /*height: 450PX;*/
             min-height: 350px;
             text-align: center;
-            border: 1px solid gray;
+            border: 1px solid #aeaeae;
             overflow: hidden;
             margin: 5px;
             padding: 5px;
@@ -73,6 +83,7 @@
             border-radius: 20px;
             margin-left: 30px;
             box-shadow: 0px 4px 4px rgba(0,0,0,0.08), 0px 0px 2px rgba(0,0,0,0.08);
+            background-color: #ffffff;
         }
         img {
             border-top-left-radius: 20px;
@@ -239,14 +250,14 @@
 
                 str += '<div class="res" style="width: 366px; min-width: 366px; margin-right: 20px;">';
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
-                str += "<h3> Name:" + data[i].Name + "</h3>";
-                str += "<h3> Category:" + data[i].Category + "</h3>";
+                str += "<b>Name:</b>" + data[i].Name + "<br />";
+                str += "<b>Category:</b>" + data[i].Category + "<br />";
                 str += "<input type='button' value='More info' id='btn" + data[i].Id + "' />";
                 str += "<div id='" + data[i].Id + "' style='display:none'>";
-                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
-                str += "<h3> Price Range:" + data[i].Price_range + "</h3>";
-                str += "<h3> Location:" + data[i].Location + "</h3>";
-                str += "<h3> Phone Numbers:" + data[i].Phone_numbers + "</h3>";
+                str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
+                str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
+                str += "<b>Location:</b>" + data[i].Location + "<br />";
+                str += "Phone Numbers:" + data[i].Phone_numbers + "<br />";
                 str += '</div>';
                 str += '</div>';
 
@@ -264,13 +275,13 @@
 
                 str += '<div class="res">';
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
-                str += "<h3> Name:" + data[i].Name + "</h3>";
-                str += "<h3> User Rating:" + data[i].User_rating + "</h3>";
-                str += "<h3> Category:" + data[i].Category + "</h3>";
-                str += "<h3> Price Range:" + data[i].Price_range + "</h3>";
-                str += "<h3> Location:" + data[i].Location + "</h3>";
-                str += "<h3> Phone Numbers:" + data[i].Phone_numbers + "</h3>";
-                str += "<h3>  ממומן</h3>";
+                str += "<b>Name</b>:" + data[i].Name + "<br />";
+                str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
+                str += "<b>Category:</b>" + data[i].Category + "<br />";
+                str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
+                str += "<b>Location:</b>" + data[i].Location + "<br />";
+                str += "<b>Phone Numbers:</b>" + data[i].Phone_numbers + "<br />";
+                str += " ממומן<br />";
                 str += '</div>';
 
 
@@ -312,10 +323,12 @@
                 </select>
             </div>
         </div>
-        <h3 class="area" id="promo">Sponsored area</h3>
-        <div id="ph_pro"></div>
-        <h3 class="area" id="organic">Organic area</h3>
-        <div id="Ph"></div>
+        <div id="results">
+            <h3 class="area" id="promo">Sponsored area</h3>
+            <div id="ph_pro"></div>
+            <h3 class="area" id="organic">Organic area</h3>
+            <div id="Ph"></div>
+        </div>
 
 
     </div>

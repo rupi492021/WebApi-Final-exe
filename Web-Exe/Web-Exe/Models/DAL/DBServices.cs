@@ -28,7 +28,7 @@ public class DBServices
 
     // Build the Insert command String
     //--------------------------------------------------------------------
-    
+
 
     // Create the SqlCommand
     //---------------------------------------------------------------------------------
@@ -280,6 +280,64 @@ public class DBServices
 
         return command;
     }
+
+    //update Attribute_att_In_cust_Update
+
+    public int Attribute_att_In_cust_Update(Attribute_In_cust attribute_In_cust)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand2(attribute_In_cust);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildInsertCommand2(Attribute_In_cust attribute_In_cust)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values({0}, {1})", attribute_In_cust.Id_att, attribute_In_cust.Id_cust);
+        String prefixc = "UPDATE Attribute_Cust_2021 SET ID_attribue=ID_attribue "+ attribute_In_cust.Id_att + ",Id_cust=Id_cust" +attribute_In_cust.Id_cust+" where id="+ attribute_In_cust.Id_cust ;
+        command = prefixc + sb.ToString();
+
+        return command;
+    }
+
+
 
 
     //Update Budget of Campaign by id
