@@ -3,7 +3,7 @@
 <head>
 
 
-    <title>DataTable Example</title>
+    <title>Admin Page</title>
 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
@@ -14,6 +14,16 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
     <script src="../Scripts/ajaxCalls.js"></script>
     <style type="text/css">
+
+        #main {
+            width: 100%;
+            height: 450PX;
+            background-image: url('../imgs/img_res.png');
+            background-size: 100% 100%;
+            color: white;
+            font-family: -webkit-pictograph;
+            font-weight: bold;
+        }
 
         button {
             margin-left: 10px;
@@ -156,10 +166,17 @@
         function onSubmitFunc() {
 
             var _Id = -1;
+            var difference = 0;
+            var _bal = 0;
             if (mode == "edit") {
+                _bal = $("#Balance").val()
                 _Id = camp.Id;
-
-
+                new_budg = $("#Budget").val();
+                old_budg = camp.Budget;
+                difference = Math.abs(old_budg - new_budg)
+            }
+            else {
+                _bal = $("#Budget").val()
             }
       
             //noam-new
@@ -168,11 +185,11 @@
                 Id: _Id, 
                 Id_rest: $("#Restaurant").val(),
                 Budget: $("#Budget").val(),
-                Amount_use: $("#Balance").val(),
+                Balance: _bal,
                 Num_clicks: $("#Clicks").val(),
                 Num_views: $("#Views").val(),
-                Status: true
-              //Difference: difference
+                Status: true,
+                Difference: difference
             }
             console.log(camptosave)
 
@@ -183,14 +200,14 @@
                 ajaxCall("POST", "../api/Campaign", JSON.stringify(camptosave), insertSuccess, error);
             return false;
         }
-
+         
         // fill the form fields
         function populateFields(campId) {
             camp = getCamp(campId);
             let str = "<option value='" + camp.Id_rest + "'>" + camp.Rest_name + "</option>";
             document.getElementById("Restaurant").innerHTML = str;
             $("#Budget").val(camp.Budget);
-            $("#Balance").val(camp.Amount_use);
+            $("#Balance").val(camp.Balance);
             $("#Cliks").val(camp.Num_clicks);
             $("#Views").val(camp.Num_views);
       
@@ -287,7 +304,7 @@
                         { data: "Id" },
                         { data: "Rest_name" },
                         { data: "Budget" },
-                        { data: "Amount_use" },
+                        { data: "Balance" },
                         { data: "Num_views" },
                         { data: "Num_views" },
                         {
@@ -317,10 +334,8 @@
 <body>
 
     <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Car DataTable Example</a>
-            </div>
+        <div id="main" class="container-fluid">
+                <a class="navbar-brand" href="Home.html">Back to Search</a>
         </div>
     </nav>
 
