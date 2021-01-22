@@ -36,7 +36,15 @@ namespace cuisin.Controllers
             List<Businesses> bList = businesses.ReadPromot(category);
             return bList;
         }
- 
+        [HttpGet]
+        [Route("api/Businesses/GetActive/{category}")]
+        public List<Businesses> GetActive(string category)
+        {
+            Businesses businesses = new Businesses();
+            List<Businesses> bList = businesses.ReadActive(category);
+            return bList;
+        }
+
 
 
         [HttpGet]
