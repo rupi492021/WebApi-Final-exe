@@ -294,6 +294,61 @@ public class DBServices
 
         return command;
     }
+    //Delete Attribute_att_In_cust
+    public int Attribute_att_In_cust_Delete(int id)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildInsertCommand(id);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildInsertCommand(int id)
+    {
+        String command;
+
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("{0}", id);
+        String prefixc = "DELETE FROM Attribute_Cust_2021 WHERE Id_cust=";
+        command = prefixc + sb.ToString();
+
+        return command;
+    }
 
     //update Attribute_att_In_cust_Update
 
@@ -313,7 +368,6 @@ public class DBServices
         }
 
         String cStr = BuildInsertCommand2(attribute_In_cust);      // helper method to build the insert string
-
         cmd = CreateCommand(cStr, con);             // create the command
 
         try
@@ -345,9 +399,9 @@ public class DBServices
         StringBuilder sb = new StringBuilder();
         // use a string builder to create the dynamic string
         sb.AppendFormat("Values({0}, {1})", attribute_In_cust.Id_att, attribute_In_cust.Id_cust);
-        String prefixc = "UPDATE Attribute_Cust_2021 SET ID_attribue=ID_attribue "+ attribute_In_cust.Id_att + ",Id_cust=Id_cust" +attribute_In_cust.Id_cust+" where id="+ attribute_In_cust.Id_cust ;
+        String prefixc = "INSERT INTO Attribute_Cust_2021 " + "(Id_attribute, Id_cust) ";
         command = prefixc + sb.ToString();
-
+ 
         return command;
     }
 
