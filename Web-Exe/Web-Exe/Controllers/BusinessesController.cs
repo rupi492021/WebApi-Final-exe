@@ -10,69 +10,133 @@ namespace cuisin.Controllers
 {
     public class BusinessesController : ApiController
     {
-        // GET api/<controller>
 
-        public List<Businesses> Get()
+        public IHttpActionResult Get()
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.Read();
-            return bList;
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.Read();
+                return Ok(bList);
+
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
+
+
 
         [HttpGet]
         [Route("api/Businesses/{category}")]
-        public List<Businesses> Get(string category)
+        public IHttpActionResult Get(string category)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.Read(category);
-            return bList;
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.Read(category);
+                return Ok(bList);
+
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
+
+
 
         [HttpGet]
         [Route("api/Businesses/GetPromot/{category}")]
-        public List<Businesses> GetPromot(string category)
+        public IHttpActionResult GetPromot(string category)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.ReadPromot(category);
-            return bList;
+
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.ReadPromot(category);
+                return Ok(bList);
+
+            } catch(Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
+
+
+
+
         [HttpGet]
         [Route("api/Businesses/GetActive/{category}")]
-        public List<Businesses> GetActive(string category)
+        public IHttpActionResult GetActive(string category)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.ReadActive(category);
-            return bList;
+
+
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.ReadActive(category);
+                return Ok(bList);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
 
 
 
         [HttpGet]
         [Route("api/Businesses/Byuser")]
-        public List<Businesses> GetByuser([FromUri] int[] att_id)
+        public IHttpActionResult GetByuser([FromUri] int[] att_id)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.ReadByUser(att_id);
-            return bList;
+
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.ReadByUser(att_id);
+                return Ok(bList);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
+
 
         [HttpGet]
         [Route("api/Businesses/Byuser/{category}")]
-        public List<Businesses> Get([FromUri] int[] att_id , string category)
+        public IHttpActionResult Get([FromUri] int[] att_id, string category)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.ReadByUser(att_id, category);
-            return bList;
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.ReadByUser(att_id, category);
+                return Ok(bList);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
+           
         }
 
 
         [HttpGet]
         [Route("api/Businesses/GetPromotByUser/{category}")]
-        public List<Businesses> GetPromotByUser([FromUri] int[] att_id, string category)
+        public IHttpActionResult GetPromotByUser([FromUri] int[] att_id, string category)
         {
-            Businesses businesses = new Businesses();
-            List<Businesses> bList = businesses.ReadPromotByUser(att_id, category);
-            return bList;
+            try
+            {
+                Businesses businesses = new Businesses();
+                List<Businesses> bList = businesses.ReadPromotByUser(att_id, category);
+                return Ok(bList);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+            }
         }
 
 
@@ -82,14 +146,6 @@ namespace cuisin.Controllers
         {
             return "value";
         }
-
-        // POST api/<controller>
-        //public int Post([FromBody]Businesses businesses)
-        //{
-           
-        //    //return businesses.Insert();
-        //}
-     
 
 
         // PUT api/<controller>/5
