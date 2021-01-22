@@ -22,10 +22,17 @@ namespace Web_Exe.Controllers
             return "value";
         }
 
-        // POST api/<controller>
-        public int Post([FromBody]Attribute_In_rest attribute_In_rest)
+        public HttpResponseMessage Post([FromBody]Attribute_In_rest attribute_In_rest)
         {
-            return attribute_In_rest.Insert();
+            try
+            {
+                attribute_In_rest.Insert();
+                return Request.CreateResponse(HttpStatusCode.OK, 200);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
         }
 
         // PUT api/<controller>/5
