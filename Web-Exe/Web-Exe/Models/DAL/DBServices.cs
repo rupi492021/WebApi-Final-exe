@@ -12,18 +12,18 @@ using Web_Exe.Models;
 using System.Linq;
 
 public class DBServices
+{
+    public SqlDataAdapter da;
+    public DataTable dt;
+    public SqlConnection connect(String conString)
     {
-        public SqlDataAdapter da;
-        public DataTable dt;
-        public SqlConnection connect(String conString)
-        {
 
-            // read the connection string from the configuration file
-            string cStr = WebConfigurationManager.ConnectionStrings[conString].ConnectionString;
-            SqlConnection con = new SqlConnection(cStr);
-            con.Open();
-            return con;
-        }
+        // read the connection string from the configuration file
+        string cStr = WebConfigurationManager.ConnectionStrings[conString].ConnectionString;
+        SqlConnection con = new SqlConnection(cStr);
+        con.Open();
+        return con;
+    }
 
 
     // Build the Insert command String
@@ -33,20 +33,20 @@ public class DBServices
     // Create the SqlCommand
     //---------------------------------------------------------------------------------
     private SqlCommand CreateCommand(String CommandSTR, SqlConnection con)
-        {
+    {
 
-            SqlCommand cmd = new SqlCommand(); // create the command object
+        SqlCommand cmd = new SqlCommand(); // create the command object
 
-            cmd.Connection = con;              // assign the connection to the command object
+        cmd.Connection = con;              // assign the connection to the command object
 
-            cmd.CommandText = CommandSTR;      // can be Select, Insert, Update, Delete 
+        cmd.CommandText = CommandSTR;      // can be Select, Insert, Update, Delete 
 
-            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
 
-            cmd.CommandType = System.Data.CommandType.Text; // the type of the command, can also be stored procedure
+        cmd.CommandType = System.Data.CommandType.Text; // the type of the command, can also be stored procedure
 
-            return cmd;
-        }
+        return cmd;
+    }
 
 
 
@@ -139,6 +139,20 @@ public class DBServices
         }
         catch (Exception ex)
         {
+            try
+            {
+                String cStr2 = BuildUpdateStatusCommand(campaign);
+
+                cmd = CreateCommand(cStr2, con);
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             // write to log
             throw (ex);
         }
@@ -357,7 +371,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildUpdateCommand(id,budget);      // helper method to build the insert string
+        String cStr = BuildUpdateCommand(id, budget);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -386,7 +400,7 @@ public class DBServices
     private String BuildUpdateCommand(int id, int difference)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET budget = budget + " + difference + " ,balance = balance + " + difference + " WHERE id = " +id+ "; ";
+        command = "UPDATE campaingn_2021 SET budget = budget + " + difference + " ,balance = balance + " + difference + " WHERE id = " + id + "; ";
         return command;
     }
 
@@ -439,11 +453,19 @@ public class DBServices
         command = "UPDATE campaingn_2021 SET status = 'False',balance = budget, num_clicks = 0,num_views=0 WHERE id = " + id + "; ";
         return command;
     }
+    private String BuildUpdateStatusCommand(Campaign c)
+    { 
+        String command;
+        command = "UPDATE campaingn_2021 SET status = 'True',budget = " + c.Budget+ ",balance = " + c.Budget + ", num_clicks = 0,num_views=0 WHERE id_rest = " + c.Id_rest + "; ";
+        return command;
+    }
 
 
 
-    //Check if customer is Exits, if yes give back all the data about the customer
-    public List<Customer> CheckIfExits(string mail, string password)
+
+
+//Check if customer is Exits, if yes give back all the data about the customer
+public List<Customer> CheckIfExits(string mail, string password)
     {
         SqlConnection con = null;
         List<Customer> customers = new List<Customer>();
@@ -671,7 +693,7 @@ public class DBServices
         {
             con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-            String selectSTR = "select ca.id,id_rest,[name],budget,amount_use,num_clicks,num_views,[status] from campaingn_2021 as ca inner join Restaurants_2021 as re on ca.id_rest = re.id where[status] = 'true'";
+            String selectSTR = "select ca.id,id_rest,[name],budget,Balance,num_clicks,num_views,[status] from campaingn_2021 as ca inner join Restaurants_2021 as re on ca.id_rest = re.id where[status] = 'true'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             // get a reader
