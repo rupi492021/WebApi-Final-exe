@@ -542,7 +542,7 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
                         "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
+                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ");
                 selectSTR = sb.ToString();
             }
             else
@@ -553,7 +553,7 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "from Restaurants_2021 as Re " +
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
-                        "where category like '%{0}%' " +
+                        "where category like '%{0}%' and Re.id not in( select id_rest from campaingn_2021 where status= 'True') " +
                         "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
                         "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
                 selectSTR = sb.ToString();
@@ -800,7 +800,6 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "from Restaurants_2021 as Re " +
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
-                        "where Re.id not in( select id_rest from campaingn_2021 where status= 'True') " +
                         "group by  Re.id, Att.Id,Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
                         "order by {0}" , select_att_case);
                 selectSTR = sb.ToString();
