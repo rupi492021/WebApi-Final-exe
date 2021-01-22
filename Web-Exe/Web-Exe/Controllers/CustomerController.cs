@@ -14,17 +14,36 @@ namespace cuisin.Controllers
 
 
         // GET api/<controller>/5
-        public List<Customer> Get(string mail, string password)
+        public IHttpActionResult Get(string mail, string password)
         {
-            Customer Customer = new Customer();
-            List<Customer> Customer_Islogged = Customer.CheckIfLog(mail, password);
-            return Customer_Islogged;
+            try
+            {
+                Customer Customer = new Customer();
+                List<Customer> Customer_Islogged = Customer.CheckIfLog(mail, password);
+                return Ok(Customer_Islogged);
+            }
+            catch (Exception e)
+            {
+                return Content(HttpStatusCode.BadRequest, e);
+
+
+            }
         }
 
         // POST api/<controller>
-        public int Post([FromBody]Customer customer)
+        public IHttpActionResult Post([FromBody]Customer customer)
         {
-            return customer.Insert();
+            try
+            {
+                int count = customer.Insert();
+                return Created(new Uri(Request.RequestUri.AbsoluteUri + customer.Id), count);
+
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
         }
 
         // PUT api/<controller>/5

@@ -682,6 +682,71 @@ public List<Customer> CheckIfExits(string mail, string password)
         }
 
     }
+    public List<Businesses> getActive(string category)
+    {
+        SqlConnection con = null;
+        List<Businesses> bList = new List<Businesses>();
+        string selectSTR = null;
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("select * from Restaurants_2021 where category like'%" + category+"%' and id not in( select id_rest from campaingn_2021 where status= 'True')");
+            selectSTR = sb.ToString();
+
+
+
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            List<Businesses> Unique_list = new List<Businesses>();
+            List<int> Id_list = new List<int>();
+            while (dr.Read())
+            {
+                Businesses B = new Businesses();
+                B.Id = Convert.ToInt32(dr["id"]);
+                B.Name = (string)dr["name"];
+                B.User_rating = Convert.ToDouble(dr["user_rating"]);
+                B.Category = (string)dr["category"];
+                B.Price_range = Convert.ToInt32(dr["price_range"]);
+                B.Location = (string)dr["location"];
+                B.Phone_numbers = (string)dr["phone_numbers"];
+                B.Featured_image = (string)dr["featured_image"];
+
+                bList.Add(B);
+
+
+            }
+            //filter list only unique items
+            foreach (Businesses value in bList)
+            {
+                if (!Id_list.Contains(value.Id))
+                {
+                    Id_list.Add(value.Id);
+                    Unique_list.Add(value);
+                }
+            }
+
+            return Unique_list;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
 
     //Get all Campaingns Data
     public List<Campaign> getcampaingns()
