@@ -56,6 +56,8 @@ namespace cuisin.Models
         {
             DBServices dbs = new DBServices();
             List<Businesses> bList = dbs.getPromot(category);
+            dbs.CampaignView(bList);
+
             return bList;
         }
 
@@ -79,5 +81,7 @@ namespace cuisin.Models
             List<Businesses> bList = dbs.getPromotBusinessesByUser(att_id, category);
             return bList;
         }
+
+
     }
 }

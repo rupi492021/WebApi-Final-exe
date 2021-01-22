@@ -15,6 +15,8 @@ public class DBServices
 {
     public SqlDataAdapter da;
     public DataTable dt;
+    private string command;
+
     public SqlConnection connect(String conString)
     {
 
@@ -999,4 +1001,63 @@ public List<Customer> CheckIfExits(string mail, string password)
                   "select balance from campaingn_2021 where id = " + id.ToString();
         return command;
     }
+
+
+    //Campaign was Viewd- update campaign
+    public int CampaignView(List<Businesses> blist)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            //write to log
+            throw (ex);
+        }
+
+        String cStr = BuildComm_AfterView(blist);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            //write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                //close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildComm_AfterView(List<Businesses> blist)
+    {
+       
+      
+        foreach (Businesses business in blist)
+        {
+           command += " UPDATE campaingn_2021 SET num_views = num_views + 1,balance = balance - 0.1 WHERE id_rest = " + business.Id.ToString();
+        }
+
+
+        return command;
+    }
+
+
 }
