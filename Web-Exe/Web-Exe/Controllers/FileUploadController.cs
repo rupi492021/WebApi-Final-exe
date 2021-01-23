@@ -38,7 +38,7 @@ namespace Webzomato3.Controllers
                         var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/uploadedFiles"), fname);
                         // Save the uploaded file  
                         httpPostedFile.SaveAs(fileSavePath);
-                        imageLinks.Add("uploadedFiles/" + fname);
+                        imageLinks.Add("Imgs/" + fname);
                     }
                 }
             }
