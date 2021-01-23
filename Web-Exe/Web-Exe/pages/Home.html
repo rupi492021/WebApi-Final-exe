@@ -180,7 +180,6 @@
             id = $(this).attr('id');
             $(this).hide();
             $("#info" + id).show();
-            ajaxCall("PUT","../api/Campaign/Click/"+id,"",PutSuccess, PutError)
         }
 
         function PutSuccess() { }
@@ -296,6 +295,10 @@
             }
             $("#ph_pro").html(str);
             $('.res > input[type=button]').click(viewinfo);
+            $('#ph_pro>input[type=button]').click(function () {
+            ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
+
+            });
 
         }
 
