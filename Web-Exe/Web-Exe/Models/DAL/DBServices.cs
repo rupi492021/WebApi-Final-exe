@@ -15,6 +15,8 @@ public class DBServices
 {
     public SqlDataAdapter da;
     public DataTable dt;
+    private string command;
+
     public SqlConnection connect(String conString)
     {
 
@@ -594,7 +596,7 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
                         "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
-                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
+                        "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ");
                 selectSTR = sb.ToString();
             }
             else
@@ -605,7 +607,7 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "from Restaurants_2021 as Re " +
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
-                        "where category like '%{0}%' " +
+                        "where category like '%{0}%' and Re.id not in( select id_rest from campaingn_2021 where status= 'True') " +
                         "group by Re.id, Att.[name],Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
                         "order by Re.price_range,Re.user_rating DESC,case when Att.[name] = 'Wifi' then 0 else 1 end ", category);
                 selectSTR = sb.ToString();
@@ -695,6 +697,71 @@ public List<Customer> CheckIfExits(string mail, string password)
             List<int> Id_list = new List<int>();
             while (dr.Read())
             {  
+                Businesses B = new Businesses();
+                B.Id = Convert.ToInt32(dr["id"]);
+                B.Name = (string)dr["name"];
+                B.User_rating = Convert.ToDouble(dr["user_rating"]);
+                B.Category = (string)dr["category"];
+                B.Price_range = Convert.ToInt32(dr["price_range"]);
+                B.Location = (string)dr["location"];
+                B.Phone_numbers = (string)dr["phone_numbers"];
+                B.Featured_image = (string)dr["featured_image"];
+
+                bList.Add(B);
+
+
+            }
+            //filter list only unique items
+            foreach (Businesses value in bList)
+            {
+                if (!Id_list.Contains(value.Id))
+                {
+                    Id_list.Add(value.Id);
+                    Unique_list.Add(value);
+                }
+            }
+
+            return Unique_list;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                con.Close();
+            }
+
+        }
+
+    }
+    public List<Businesses> getActive(string category)
+    {
+        SqlConnection con = null;
+        List<Businesses> bList = new List<Businesses>();
+        string selectSTR = null;
+        try
+        {
+            con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("select * from Restaurants_2021 where category like'%" + category+"%' and id not in( select id_rest from campaingn_2021 where status= 'True')");
+            selectSTR = sb.ToString();
+
+
+
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            // get a reader
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            List<Businesses> Unique_list = new List<Businesses>();
+            List<int> Id_list = new List<int>();
+            while (dr.Read())
+            {
                 Businesses B = new Businesses();
                 B.Id = Convert.ToInt32(dr["id"]);
                 B.Name = (string)dr["name"];
@@ -864,7 +931,7 @@ public List<Customer> CheckIfExits(string mail, string password)
                         "from Restaurants_2021 as Re " +
                         "inner join Attribute_rest_2021 as AtR on Re.id = AtR.Id_rest " +
                         "inner join Attribute_2021 as Att on AtR.Id_attribute = Att.Id " +
-                        "where category like '%{0}%' " +
+                        "where category like '%{0}%' and Re.id not in( select id_rest from campaingn_2021 where status= 'True') " +
                         "group by  Re.id, Att.Id,Re.[name], Re.user_rating, Re.category, Re.price_range, Re.[location],Re.phone_numbers,Re.featured_image " +
                         "order by {1}", category, select_att_case);
                 selectSTR = sb.ToString();
@@ -1053,4 +1120,63 @@ public List<Customer> CheckIfExits(string mail, string password)
                   "select balance from campaingn_2021 where id = " + id.ToString();
         return command;
     }
+
+
+    //Campaign was Viewd- update campaign
+    public int CampaignView(List<Businesses> blist)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("DBConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            //write to log
+            throw (ex);
+        }
+
+        String cStr = BuildComm_AfterView(blist);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            //write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                //close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    //--------------------------------------------------------------------
+    private String BuildComm_AfterView(List<Businesses> blist)
+    {
+       
+      
+        foreach (Businesses business in blist)
+        {
+           command += " UPDATE campaingn_2021 SET num_views = num_views + 1,balance = balance - 0.1 WHERE id_rest = " + business.Id.ToString();
+        }
+
+
+        return command;
+    }
+
+
 }

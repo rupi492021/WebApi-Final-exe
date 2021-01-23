@@ -24,18 +24,33 @@ namespace cuisin.Models
             }
         }
 
-     
 
         // POST api/<controller>
-        public void Post([FromBody]Attribute_In_cust attribute_In_Cust)
+        public HttpResponseMessage Post([FromBody]Attribute_In_cust attribute_In_Cust)
         {
-             attribute_In_Cust.Insert();
+            try
+            {
+                attribute_In_Cust.Insert();
+                return Request.CreateResponse(HttpStatusCode.OK, 200);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+
         }
 
-        // PUT api/<controller>/5
-        public void Put([FromBody]Attribute_In_cust attribute_In_Cust)
+        public HttpResponseMessage Put([FromBody]Attribute_In_cust attribute_In_Cust)
         {
-            attribute_In_Cust.Update();
+            try
+            {
+                attribute_In_Cust.Update();
+                return Request.CreateResponse(HttpStatusCode.OK, 200);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
 
         }
 

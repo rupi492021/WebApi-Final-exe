@@ -209,7 +209,6 @@
     <Content Include="pages\Home.html" />
     <Content Include="pages\LogIn.html" />
     <Content Include="pages\Manage.html" />
-    <Content Include="pages\NewsFeed.html" />
     <Content Include="pages\Sign_up.html" />
     <Content Include="pages\Preferences.html" />
     <Content Include="Scripts\ajaxCalls.js" />

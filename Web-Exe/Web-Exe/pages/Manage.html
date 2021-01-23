@@ -85,7 +85,7 @@
             // once the document is ready we fetch a list of cars from the server
             ajaxCall("GET", "../api/Campaign", "", getSuccess, error);
             $("#Cuisin").on("change", function () {
-                let api = "../api/Businesses/" + this.value
+                let api = "../api/Businesses/GetActive/" + this.value;
                 ajaxCall("GET",api, "", geResSuccess, Reserror);
 
             });
@@ -100,7 +100,6 @@
 
         // wire all the buttons to their functions
         function buttonEvents() {
-
             $(document).on("click", ".editBtn", function () {
                 mode = "edit";
                 markSelected(this);
@@ -154,7 +153,10 @@
         function geResSuccess(res) {
             let str = "<option value=''>Select Resaurant</option>";
             for (var i = 0; i < res.length; i++) {
-                str += "<option value='" + res[i].Id +"'>"+res[i].Name+"</option>"
+                {
+                    str += "<option value='" + res[i].Id + "'>" + res[i].Name + "</option>"
+
+                }
             }
             document.getElementById("Restaurant").innerHTML = str;
         }

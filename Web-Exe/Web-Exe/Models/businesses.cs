@@ -56,6 +56,16 @@ namespace cuisin.Models
         {
             DBServices dbs = new DBServices();
             List<Businesses> bList = dbs.getPromot(category);
+            if(bList.Count > 0)
+            {
+                dbs.CampaignView(bList);
+            }
+            return bList;
+        }
+        public List<Businesses> ReadActive(string category)
+        {
+            DBServices dbs = new DBServices();
+            List<Businesses> bList = dbs.getActive(category);
             return bList;
         }
 
@@ -77,7 +87,13 @@ namespace cuisin.Models
         {
             DBServices dbs = new DBServices();
             List<Businesses> bList = dbs.getPromotBusinessesByUser(att_id, category);
+            if (bList.Count > 0)
+            {
+                dbs.CampaignView(bList);
+            }
             return bList;
         }
+
+
     }
 }
