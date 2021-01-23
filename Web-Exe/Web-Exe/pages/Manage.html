@@ -133,7 +133,7 @@
                     dangerMode: true
                 })
                     .then(function (willDelete) {
-                        if (willDelete) DeleteCar(carId);
+                        if (willDelete) DeleteCamp(carId);
                         else swal("Not Deleted!");
                     });
             });
@@ -147,7 +147,7 @@
         }
 
         // Delete a car from the server
-        function DeleteCar(id) {
+        function DeleteCamp(id) {
             ajaxCall("PUT", "../api/Campaign/" + id, "", deleteSuccess, error);
         }
         function geResSuccess(res) {
@@ -175,7 +175,7 @@
                 _Id = camp.Id;
                 new_budg = $("#Budget").val();
                 old_budg = camp.Budget;
-                difference = Math.abs(old_budg - new_budg)
+                difference = old_budg - new_budg
             }
             else {
                 _bal = $("#Budget").val()
