@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 
-namespace Webzomato3.Controllers
+namespace resturantwebApp.Controllers
 {
     public class FileUploadController : ApiController
     {
@@ -35,10 +35,11 @@ namespace Webzomato3.Controllers
                         // Construct file save path  
                         //var fileSavePath = Path.Combine(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["fileUploadFolder"]), httpPostedFile.FileName);
                         string fname = httpPostedFile.FileName.Split('\\').Last();
-                        var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/Imgs"), fname);
+                        name += fname;
+                        var fileSavePath = Path.Combine(HostingEnvironment.MapPath("~/Imgs"), name);
                         // Save the uploaded file  
                         httpPostedFile.SaveAs(fileSavePath);
-                        imageLinks.Add("Imgs/" + fname);
+                        imageLinks.Add("Imgs/" + name);
                     }
                 }
             }

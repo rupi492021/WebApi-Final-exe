@@ -20,7 +20,7 @@
 
 
 <script>
-    var id = 0;
+    var id = "sdfsd";
 $(document).ready(function () {
     $("#pForm").submit(f1); // bind the submit event to a function called f1
     // activate a custom validation function when the element looses focus.
@@ -40,7 +40,7 @@ $(document).ready(function () {
             for (f = 0; f < files.length; f++) {
                 data.append("Imgs", files[f]);
             }
-            data.append("name", "img"); // append what ever data you want to send along with the files. See how you extract it in the controller.
+            data.append("name", document.getElementById("email").value); // append what ever data you want to send along with the files. See how you extract it in the controller.
         }
 
         // Ajax upload
@@ -63,6 +63,7 @@ var img_name;
 function showImages(data) {
     console.log(data);
     img_name = data[0];
+    console.log(img_name);
     var imgStr = "";
 
     if (Array.isArray(data)) {
@@ -103,7 +104,7 @@ function submit() {
         Mail: _email,
         Phone: _phone,
         Password: _password,
-        Img: _image,
+        Image: _image,
     }
 
 
