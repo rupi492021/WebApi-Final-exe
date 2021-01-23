@@ -57,7 +57,8 @@
         }
 
             a:hover {
-                font-weight: 500;
+                font-weight: 700;
+                color: #efd4b7;
             }
 
         .search {
@@ -97,15 +98,15 @@
 
         input[type=button] {
             border: 1px solid gray;
-            background-color: #d7ecf5;
+            background-color: #efd4b7;
             border-radius: 20px;
         }
         .area {
             font-size: 20px;
             text-align: center;
             border: 1px solid gray;
-            background-color: #d7ecf5;
-            border-radius: 20px;
+            background-color: #efd4b7;
+            border-radius: 8px;
         }
     </style>
 
@@ -118,12 +119,12 @@
         $(document).ready(function () {
             $(".area").hide();
             if (localStorage.length == 0) {
-                $("#Bar").html('<a href="Login.html">Login</a><a href="Manage.html">Admin</a><a href="Sign_up.html">Singup</a>');
+                $("#Bar").html('<a href="Manage.html">Admin</a><a href="Sign_up.html">Singup</a><a href="Login.html">Login</a>');
                 $("#sl").change(search_category);
                 ajaxCall("get", "../api/Businesses/", "", getSuccessAtr, getErrorAtr);
             }
             else {
-                $("#Bar").html('<a href="Preferences.html">Updating Preferences</a><a href="Manage.html">Admin</a><a href="" id="logout">Logout</a>');
+                $("#Bar").html('<a href="Manage.html">Admin</a><a href="Preferences.html">Update Preferences</a><a href="" id="logout">Logout</a>');
                 $("#sl").change(search_categoryByUser);
                 id = localStorage.getItem('ID');
                 ajaxCall("get", "../api/Attribute_In_cust/" + id, "", getSuccessAtrcust, getErrorAtrcust);
@@ -177,10 +178,14 @@
         function viewinfo() {
             console.log($(this));
             id = $(this).attr('id');
-            id = id.split('btn')[1];
             $(this).hide();
-            $("#" + id).show();
+            $("#info" + id).show();
+            ajaxCall("PUT","../api/Campaign/Click/"+id,"",PutSuccess, PutError)
         }
+
+        function PutSuccess() { }
+
+        function PutError() { }
 
         //function postSuccess(data) {
         //    console.log(data);
@@ -253,14 +258,15 @@
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<b>Name:</b>" + data[i].Name + "<br />";
                 str += "<b>Category:</b>" + data[i].Category + "<br />";
-                str += "<input type='button' value='More info' id='btn" + data[i].Id + "' />";
-                str += "<div id='" + data[i].Id + "' style='display:none'>";
+                str += "<input type='button' value='More info' id='" + data[i].Id + "' />";
+                str += "<div id='info" + data[i].Id + "' style='display:none'>";
                 str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
                 str += "<b>Location:</b>" + data[i].Location + "<br />";
                 str += "Phone Numbers:" + data[i].Phone_numbers + "<br />";
                 str += '</div>';
                 str += '</div>';
+
 
             }
             $("#Ph").html(str);
@@ -276,12 +282,14 @@
                 str += '<div class="res">';
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<b>Name</b>:" + data[i].Name + "<br />";
-                str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Category:</b>" + data[i].Category + "<br />";
+                str += "<input type='button' value='More info' id='" + data[i].Id + "' />";
+                str += "<div id='info" + data[i].Id + "' style='display:none'>";
+                str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
                 str += "<b>Location:</b>" + data[i].Location + "<br />";
                 str += "<b>Phone Numbers:</b>" + data[i].Phone_numbers + "<br />";
-                str += " ממומן<br />";
+                str += '</div>';
                 str += '</div>';
 
 
