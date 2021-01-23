@@ -79,7 +79,7 @@
             id = $(this).attr('id');
             $(this).hide();
             $("#info" + id).show();
-            ajaxCall("PUT","../api/Campaign/Click/"+id,"",PutSuccess, PutError)
+            ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
         }
 
         function PutSuccess() { }
@@ -190,11 +190,15 @@
                 str += "<b>Phone Numbers:</b>" + data[i].Phone_numbers + "<br />";
                 str += '</div>';
                 str += '</div>';
-
+                
 
             }
             $("#ph_pro").html(str);
             $('.res > input[type=button]').click(viewinfo);
+            $('#ph_pro>input[type=button]').click(function () {
+            
+
+            });
 
         }
 

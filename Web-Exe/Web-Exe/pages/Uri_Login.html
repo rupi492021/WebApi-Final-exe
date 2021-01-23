@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link href="../Scripts/Login_style.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <script src="https://sweet-modal.adepto.as/js/jquery.sweet-modal.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
     <title>GuestMainPage</title>
 
@@ -46,15 +46,12 @@
         }
 
         function getSuccess(data) {
-            console.log("uri")
             if (data != 0) {
-
-                console.log(data);
+                swal("Login Successfuly!", "Great Job", "success");
                 localStorage.setItem("ID", data[0].Id);
                 window.location = "Home.html";
             }
             else
-                alert("lo tov")
                 swal("Oops...", "The email address or password is incorrect!", "error");
 
 
@@ -62,7 +59,7 @@
 
 
 
-       
+
 
         function getError() {
             console.log("error");

@@ -1116,8 +1116,8 @@ public List<Customer> CheckIfExits(string mail, string password)
     private String BuildComm_AfterClicked(int id)
     {
         String command;
-        command = "UPDATE campaingn_2021 SET num_clicks = num_clicks + 1,balance = balance - 0.5 WHERE id = " + id.ToString() + " " +
-                  "select balance from campaingn_2021 where id = " + id.ToString();
+        command = "UPDATE campaingn_2021 SET num_clicks = num_clicks + 1,balance = balance - 0.5 WHERE id_rest = " + id.ToString() + " " +
+                  "select balance from campaingn_2021 where id_rest = " + id.ToString();
         return command;
     }
 
