@@ -84,7 +84,7 @@
 
             // once the document is ready we fetch a list of cars from the server
             ajaxCall("GET", "../api/Campaign", "", getSuccess, error);
-            $("#Cuisin").on("change", function () {
+            $("#Cuisin").on("change", function () { 
                 let api = "../api/Businesses/GetActive/" + this.value;
                 ajaxCall("GET",api, "", geResSuccess, Reserror);
 

@@ -76,7 +76,7 @@ a {
     background-color: #ffffff;
 }
 
-img {
+.res > img {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     width: 100%;
@@ -98,4 +98,9 @@ input[type=button] {
     border: 1px solid gray;
     background-color: #efd4b7;
     border-radius: 8px;
+}
+
+#loading {
+    display: none;
+    text-align: center;
 }

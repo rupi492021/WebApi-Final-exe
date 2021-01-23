@@ -141,6 +141,7 @@ public class DBServices
         }
         catch (Exception ex)
         {
+
             try
             {
                 String cStr2 = BuildUpdateStatusCommand(campaign);

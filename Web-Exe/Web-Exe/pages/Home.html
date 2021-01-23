@@ -8,6 +8,8 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <link rel="stylesheet" href="https://sweet-modal.adepto.as/css/jquery.sweet-modal.min.css" />
     <script src="https://sweet-modal.adepto.as/js/jquery.sweet-modal.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <link href="../Scripts/Home_style.css" rel="stylesheet" />
     <script>
 
@@ -16,7 +18,17 @@
         var Attrlist = [];
 
         $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#results").hide();
+                $('#loading').show();
+            }).ajaxStop(function () {
+                $("#results").show();
+                $('#loading').hide();
+            });
+
+
             $(".area").hide();
+            $("#loading").hide();
             if (localStorage.length == 0) {
                 $("#Bar").html('<a href="Manage.html">Admin</a><a href="Sign_up.html">Singup</a><a href="Uri_Login.html">Login</a>');
                 $("#sl").change(search_category);
@@ -31,7 +43,6 @@
             }
 
             $("#logout").click(function () {
-                console.log('logging out!');
                 localStorage.removeItem('ID');
                 $.sweetModal.confirm('Log out', 'Do you want to log out?', function () {
                     window.location = 'Home.html';
@@ -40,6 +51,18 @@
             });
 
         });
+
+        function viewinfo() {
+            console.log($(this));
+            id = $(this).attr('id');
+            $(this).hide();
+            $("#info" + id).show();
+
+            if ($(this).attr('name') == "promo")
+                ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
+
+        }
+
         // give attribute to resturant
         function getSuccessAtr(data) {
             render(data);
@@ -70,24 +93,17 @@
         //    }
         //}
         function getErrorAtr() {
-            console.log("error");
+            swal("Error", "Loading restaurants has failed, Pleasereload the file", "error");
 
         }
 
-        function viewinfo() {
-            console.log($(this));
-            id = $(this).attr('id');
-            $(this).hide();
-            $("#info" + id).show();
-
-            if($(this).attr('name')=="promo")
-              ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
-
+        function PutSuccess(data) {
+            console.log(data);
         }
 
-        function PutSuccess() { }
-
-        function PutError() { }
+        function PutError(err) {
+            swal("Error", "Loading restaurants has failed, Pleasereload the file", "error");
+        }
 
         //function postSuccess(data) {
         //    console.log(data);
@@ -121,19 +137,6 @@
 
         }
 
-        function search_category() {
-            let category = $("#sl").find(":selected").text();
-            ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
-            console.log(category);
-            ajaxCall("get", "../api/Businesses/GetPromot/" + category, "", getSuccessPro, getErrorPro);
-        }
-        function search_categoryByUser() {
-            let category = $("#sl").find(":selected").text();
-            //  let api = category + "?attr_id=" + Attrlist[0] + "&attr_id=" + Attrlist[1] + "&attr_id="+Attrlist[2];
-            ajaxCall("get", "../api/Businesses/" + category + "?" + uri, "", getSuccess, getError);
-            ajaxCall("get", "../api/Businesses/GetPromotByUser/" + category + "?" + uri, "", getSuccessPro, getErrorPro);
-        }
-
         function getSuccess(data) {
             render(data);
         }
@@ -150,6 +153,20 @@
             console.log("error");
         }
 
+        function search_category() {
+            let category = $("#sl").find(":selected").text();
+            ajaxCall("get", "../api/Businesses/" + category, "", getSuccess, getError);
+            console.log(category);
+            ajaxCall("get", "../api/Businesses/GetPromot/" + category, "", getSuccessPro, getErrorPro);
+        }
+        function search_categoryByUser() {
+            let category = $("#sl").find(":selected").text();
+            //  let api = category + "?attr_id=" + Attrlist[0] + "&attr_id=" + Attrlist[1] + "&attr_id="+Attrlist[2];
+            ajaxCall("get", "../api/Businesses/" + category + "?" + uri, "", getSuccess, getError);
+            ajaxCall("get", "../api/Businesses/GetPromotByUser/" + category + "?" + uri, "", getSuccessPro, getErrorPro);
+        }
+
+
         function render(data) {
             if (data.length)
                 $("#organic").show();
@@ -160,7 +177,7 @@
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<b>Name:</b>" + data[i].Name + "<br />";
                 str += "<b>Category:</b>" + data[i].Category + "<br />";
-                str += "<input type='button' value='More info' name='organic' id='" + data[i].Id + "' />";
+                str += "<input type='button' value='More info' id='" + data[i].Id + "' />";
                 str += "<div id='info" + data[i].Id + "' style='display:none'>";
                 str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
@@ -234,7 +251,11 @@
                 </select>
             </div>
         </div>
+        <div id="loading">
+            <img src="../Imgs/loader.gif" />
+        </div>
         <div id="results">
+            <div id="err"></div>
             <h3 class="area" id="promo">Sponsored area</h3>
             <div id="ph_pro"></div>
             <h3 class="area" id="organic">Organic area</h3>
