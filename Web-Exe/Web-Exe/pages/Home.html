@@ -79,7 +79,10 @@
             id = $(this).attr('id');
             $(this).hide();
             $("#info" + id).show();
-            ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
+
+            if($(this).attr('name')=="promo")
+              ajaxCall("PUT", "../api/Campaign/Click/" + id, "", PutSuccess, PutError)
+
         }
 
         function PutSuccess() { }
@@ -157,7 +160,7 @@
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<b>Name:</b>" + data[i].Name + "<br />";
                 str += "<b>Category:</b>" + data[i].Category + "<br />";
-                str += "<input type='button' value='More info' id='" + data[i].Id + "' />";
+                str += "<input type='button' value='More info' name='organic' id='" + data[i].Id + "' />";
                 str += "<div id='info" + data[i].Id + "' style='display:none'>";
                 str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
@@ -182,7 +185,7 @@
                 str += "<img src=\"" + data[i].Featured_image + "\" height=\"200px\" width=\"200px\"/> <br/>";
                 str += "<b>Name</b>:" + data[i].Name + "<br />";
                 str += "<b>Category:</b>" + data[i].Category + "<br />";
-                str += "<input type='button' value='More info' id='" + data[i].Id + "' />";
+                str += "<input type='button' value='More info' name='promo' id='" + data[i].Id + "' />";
                 str += "<div id='info" + data[i].Id + "' style='display:none'>";
                 str += "<b>User Rating:</b>" + data[i].User_rating + "<br />";
                 str += "<b>Price Range:</b>" + data[i].Price_range + "<br />";
@@ -190,17 +193,14 @@
                 str += "<b>Phone Numbers:</b>" + data[i].Phone_numbers + "<br />";
                 str += '</div>';
                 str += '</div>';
-                
+
 
             }
             $("#ph_pro").html(str);
             $('.res > input[type=button]').click(viewinfo);
-            $('#ph_pro>input[type=button]').click(function () {
-            
-
-            });
 
         }
+
 
     </script>
 </head>
