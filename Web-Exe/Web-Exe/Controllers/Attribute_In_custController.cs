@@ -55,8 +55,10 @@ namespace cuisin.Models
         }
 
         // DELETE api/<controller>/5
-            public void Delete(int id)
+        public void Delete([FromBody]int id)
         {
+            Attribute_In_cust attribute_In_cust = new Attribute_In_cust();
+            attribute_In_cust.Delete(id);
         }
     }
 }

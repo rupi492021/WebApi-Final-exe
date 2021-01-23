@@ -16,7 +16,8 @@
         $(document).ready(function () {
 
             $(".chosen-select").chosen({
-                no_results_text: "Oops, nothing found!"
+                no_results_text: "Oops, nothing found!",
+                max_selected_options: 3
             });
 
             $("#BTN").click(function () {
@@ -37,6 +38,13 @@
 
         function updatePreferences() {
             // let l = $("#sel").val();
+            ajaxCall("DELETE", "../api/Attribute_In_cust", JSON.stringify(localStorage.ID), DeleteSuccess, DeleteError); 
+        }
+        function PutSuccess(data) { }
+
+        function PutError() { }
+
+        function DeleteSuccess(data) {
             $('#sel > option:selected').each(function () {
                 let Att_customer = {
                     ID_att: $(this).val(),
@@ -51,9 +59,9 @@
             swal("Preferences updated!", "Great Job", "success");
             window.location = "Home.html";
         }
-        function PutSuccess(data) { }
 
-        function PutError() { }
+        function DeleteError() { }
+
 
     </script>
 </head>
@@ -61,7 +69,7 @@
     <div class="container">
         <form id="pForm">
             <div class="form-group">
-                <label for="LABpre"> Choose Prefrences </label>
+                <label for="LABpre"> Please Update You Preferences </label>
                 <!--<input type="text" class="form-control" id="pre" required>-->
                 <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
                     <option value=""></option>
