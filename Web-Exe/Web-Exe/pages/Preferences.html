@@ -66,9 +66,10 @@
     </script>
 </head>
 <body>
-    <div class="container">
+    <!--<div class="container">
         <form id="pForm">
             <div class="form-group">
+
                 <label for="LABpre"> Please Update You Preferences </label>
                 <!--<input type="text" class="form-control" id="pre" required>-->
                 <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
@@ -85,8 +86,38 @@
                     <option value="10">Delivery</option>
                 </select>
             </div>
-            <input type="button" id="BTN" value="Update" />
+            <input type="button" id="BTN" value="Update"  class="btn btn-secondary btn-lg"/>
         </form>
+    </div>-->
+    <div class="card text-center">
+
+        <div class="card-body">
+            <h1 class="card-title">Please Update You Preferences</h1><br /><br />
+       
+
+        </div>
+        <div>
+            <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
+                <option value=""></option>
+                <option value="1">Wifi</option>
+                <option value="2">Price Range</option>
+                <option value="3">Air Conditioned</option>
+                <option value="4">Lunch</option>
+                <option value="5">Vegetarian Friendly</option>
+                <option value="6">Outdoor Seating</option>
+                <option value="7">Dinner</option>
+                <option value="8">Takeaway Available</option>
+                <option value="9">Nightlife</option>
+                <option value="10">Delivery</option>
+            </select>
+            <br /><br /><br /><br />
+        </div>
+        <div>
+            <input type="button" id="BTN" value="Update" class="btn btn-secondary btn-lg" />
+
+        </div>
+
+       
     </div>
 </body>
 </html>

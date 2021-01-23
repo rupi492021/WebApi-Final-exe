@@ -165,74 +165,77 @@ function f1() {
 </head>
 <body>
 
-<div class="container">
-<form id="pForm">
-    <h1>Create a New Customer</h1>
-    <div class="form-group">
-        <h3>Customer Details</h3>
-        <label for="modelTB"><span class="red-star">★ </span>Email</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter the your Email" required>
+    <div class="container">
+        <form id="pForm">
+            <h1>Create a New Customer</h1>
+            <div class="form-group">
+                <h3>Customer Details</h3>
+                <label for="modelTB"><span class="red-star">★ </span>Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter the your Email" required>
+            </div>
+            <div class="form-group">
+                <label for="manufacturerTB"><span class="red-star">★ </span>Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter the Password at list 8 chars include 1 Capital Letter and 1 digit"
+                       pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
+                       oninvalid="this.setCustomValidity('Enter the Password 1 Capital Letter 1 digit')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div class="form-group">
+                <label for="priceTB"><span class="red-star">★ </span>First Name</label>
+                <input type="text" class="form-control" id="fname" placeholder="Enter your First Name in Hebrew Letter (only 10 chars)"
+                       pattern="[\u0590-\u05ff]{1,10}"
+                       oninvalid="this.setCustomValidity('Enter your First Name in Hebrew Letter only 10 chars')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div class="form-group">
+                <label for="priceTB"><span class="red-star">★ </span>Last Name</label>
+                <input type="text" class="form-control" id="lname" placeholder="Enter your Last Name in English Letter"
+                       pattern="[a-z]{1,20}"
+                       oninvalid="this.setCustomValidity('Enter your First Name in English Letter only 20 chars')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div class="form-group">
+                <label for="dealerPhone">Phone </label>
+                <input type="tel" class="form-control" placeholder="Enter the phone ddd-dd-ddddddd" id="phone"
+                       pattern="[0-9]{3}-[0-9]{2}-[0-9]{7}"
+                       oninvalid="this.setCustomValidity('Format should be ddd-dd-ddddddd')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div class="form-group">
+                <label for="LABpre"><span class="red-star">★ </span> Choose Prefrences </label>
+                <!--<input type="text" class="form-control" id="pre" required>-->
+                <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
+                    <option value=""></option>
+                    <option value="1">Wifi</option>
+                    <option value="2">Price Range</option>
+                    <option value="3">Air Conditioned</option>
+                    <option value="4">Lunch</option>
+                    <option value="5">Vegetarian Friendly</option>
+                    <option value="6">Outdoor Seating</option>
+                    <option value="7">Dinner</option>
+                    <option value="8">Takeaway Available</option>
+                    <option value="9">Nightlife</option>
+                    <option value="10">Delivery</option>
+                </select>
+            </div>
+            <!-- File Upload -->
+            <!--<form method="post" enctype="multipart/form-data" id="formUpload">-->
+            <div>
+                <label for="files">Files</label>
+                <input type="file" id="files"  name="files" multiple="multiple" />
+            </div>
+            <br />
+            <button id="buttonUpload" type="button" class="btn btn-primary btn-lg">Upload files</button>
+            <div id="phpic"> </div>
+            <!--</form>-->
+            <!-- End File Upload -->
+            <br />
+            <input type="submit" class="btn btn-primary btn-lg" value="Submit" />
+
+        </form>
     </div>
-    <div class="form-group">
-        <label for="manufacturerTB"><span class="red-star">★ </span>Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Enter the Password at list 8 chars include 1 Capital Letter and 1 digit"
-                pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
-                oninvalid="this.setCustomValidity('Enter the Password 1 Capital Letter 1 digit')"
-                oninput="this.setCustomValidity('')" />
-    </div>
-    <div class="form-group">
-        <label for="priceTB"><span class="red-star">★ </span>First Name</label>
-        <input type="text" class="form-control" id="fname" placeholder="Enter your First Name in Hebrew Letter (only 10 chars)"
-                pattern="[\u0590-\u05ff]{1,10}"
-                oninvalid="this.setCustomValidity('Enter your First Name in Hebrew Letter only 10 chars')"
-                oninput="this.setCustomValidity('')" />
-    </div>
-    <div class="form-group">
-        <label for="priceTB"><span class="red-star">★ </span>Last Name</label>
-        <input type="text" class="form-control" id="lname" placeholder="Enter your Last Name in English Letter"
-                pattern="[a-z]{1,20}"
-                oninvalid="this.setCustomValidity('Enter your First Name in English Letter only 20 chars')"
-                oninput="this.setCustomValidity('')" />
-    </div>
-    <div class="form-group">
-        <label for="dealerPhone">Phone </label>
-        <input type="tel" class="form-control" placeholder="Enter the phone ddd-dd-ddddddd" id="phone"
-                pattern="[0-9]{3}-[0-9]{2}-[0-9]{7}"
-                oninvalid="this.setCustomValidity('Format should be ddd-dd-ddddddd')"
-                oninput="this.setCustomValidity('')" />
-    </div>
-    <div class="form-group">
-        <label for="LABpre"><span class="red-star">★ </span> Choose Prefrences </label>
-        <!--<input type="text" class="form-control" id="pre" required>-->
-        <select id="sel" data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" name="test">
-            <option value=""></option>
-            <option value="1">Wifi</option>
-            <option value="2">Price Range</option>
-            <option value="3">Air Conditioned</option>
-            <option value="4">Lunch</option>
-            <option value="5">Vegetarian Friendly</option>
-            <option value="6">Outdoor Seating</option>
-            <option value="7">Dinner</option>
-            <option value="8">Takeaway Available</option>
-            <option value="9">Nightlife</option>
-            <option value="10">Delivery</option>
-        </select>
-    </div>
-    <!-- File Upload -->
-    <!--<form method="post" enctype="multipart/form-data" id="formUpload">-->
-    <div>
-        <label for="files">Files</label>
-        <input type="file" id="files" name="files" multiple="multiple" />
-    </div>
-    <br />
-    <button type="button" id="buttonUpload">Upload files</button>
-    <div id="phpic"> </div>
-    <!--</form>-->
-    <!-- End File Upload -->
-    <input type="submit" value="Submit" />
-</form>
-</div>
-<div id="ph"> </div>
+    <div id="ph"> </div>
+
 
 
 </body>
