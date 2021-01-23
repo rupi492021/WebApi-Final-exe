@@ -1,4 +1,8 @@
 ﻿function ajaxCall(method, api, data, successCB, errorCB) {
+    // load - show loading icon
+    load = true;
+    if (method == "PUT")
+        load = false;
     $.ajax({
         type: method,
         url: api,
@@ -7,6 +11,7 @@
         contentType: "application/json",
         dataType: "json",
         success: successCB,
-        error: errorCB
+        error: errorCB,
+        global: load
     });
 }
