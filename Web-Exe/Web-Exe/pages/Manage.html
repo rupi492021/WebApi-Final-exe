@@ -176,14 +176,12 @@
                 _Id = camp.Id;
                 new_budg = $("#Budget").val();
                 old_budg = camp.Budget;
-                difference = old_budg - new_budg
+                difference = new_budg - old_budg
             }
             else {
                 _bal = $("#Budget").val()
             }
       
-            //noam-new
-            //var difference = תעשה שיהיה שווה להפרש של התקציב החדש והישן אם אין תקציב חדש שיהיה שווה לאפס או נאל 
             let camptosave = {
                 Id: _Id, 
                 Id_rest: $("#Restaurant").val(),
@@ -211,9 +209,8 @@
             document.getElementById("Restaurant").innerHTML = str;
             $("#Budget").val(camp.Budget);
             $("#Balance").val(camp.Balance);
-            $("#Cliks").val(camp.Num_clicks);
-            $("#Views").val(camp.Num_views);
-      
+            $("#Clicks").val(camp.Num_clicks);
+            $("#Views").val(camp.Num_views);    
         }
 
 
@@ -259,6 +256,7 @@
             mode = "";
         }
         function getSuccess1(campdata) {
+            camps = campdata;
             redrawTable(tbl, campdata);
         }
 
