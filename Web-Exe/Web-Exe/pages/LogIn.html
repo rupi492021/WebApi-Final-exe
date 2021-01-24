@@ -1,29 +1,45 @@
 ﻿<!DOCTYPE html>
 <html>
+
+
 <head>
-    <title>Log In</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="../Scripts/Login_style.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
-    <script type="text/javascript"></script>
-    <style type="text/css"></style>
-    <script>
+    <title>GuestMainPage</title>
 
+    <script>
+        line = '';
         $(document).ready(function () {
-            $("#pform").submit(log);
+            $('#sForm').submit(log);
 
         });
+
+
+
+
+
+
+
+        function clearLocal() {
+            localStorage.clear();
+
+            $("#clear").prop("disabled", true);
+            location.replace('MainPageGuest.html');
+
+        }
+
+
 
 
         function log() {
             let mail = $("#email").val();
             let pass = $("#password").val();
-            console.log(mail);
-            console.log(pass);
             let api = "../api/Customer?mail=" + mail + "&password=" + pass;
             ajaxCall("get", api, "", getSuccess, getError)
             return false;
@@ -31,16 +47,19 @@
 
         function getSuccess(data) {
             if (data != 0) {
-
-                console.log(data);
+                swal("Login Successfuly!", "Great Job", "success");
                 localStorage.setItem("ID", data[0].Id);
                 window.location = "Home.html";
             }
-            else 
+            else
                 swal("Oops...", "The email address or password is incorrect!", "error");
 
-                    
+
         }
+
+
+
+
 
         function getError() {
             console.log("error");
@@ -50,25 +69,49 @@
 
 </head>
 <body>
-    <div id="container">
-        <form id="pform">
-            <h1>Log In</h1>
-            <div class="form-group">
-                <label for="uname">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter the your Email" required />
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="Home.html">Back To Search</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="navbar-nav2">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="Sign_up.html">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="Manage.html" tabindex="-1" aria-disabled="true">Admin</a>
+                    </li>
+                </ul>
             </div>
-            <div class="form-group">
-                <label for="manufacturerTB">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter the Password at list 8 chars include 1 Capital Letter and 1 digit" required
+        </div>
+    </nav>
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+
+            <div><h1>LogIn here: </h1> </div>
+            <!-- Login Form -->
+            <form id="sForm">
+                <input type="email" id="email" class="fadeIn second" name="login" placeholder="Email">
+                <input type="password" id="password" class="fadeIn third" name="login" placeholder="Enter the Password at list 8 chars include 1 Capital Letter and 1 digit" required
                        pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
                        oninvalid="this.setCustomValidity('Enter the Password 1 Capital Letter 1 digit')"
                        oninput="this.setCustomValidity('')" />
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="Sign_up.html">Sign Up</a>
             </div>
-            <div>
-                <input type="submit" value="Submit" />
-            </div>
-        </form>
+
+        </div>
     </div>
+
 
 </body>
 </html>

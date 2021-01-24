@@ -641,7 +641,8 @@ public List<Customer> CheckIfExits(string mail, string password)
             foreach (Businesses value in bList)
             {
                 if (!Id_list.Contains(value.Id))
-                {
+                { 
+
                     Id_list.Add(value.Id);
                     Unique_list.Add(value);
                 }
