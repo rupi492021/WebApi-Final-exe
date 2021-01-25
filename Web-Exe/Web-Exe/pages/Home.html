@@ -29,7 +29,7 @@
             $(".area").hide();
             $("#loading").hide();
             if (localStorage.length == 0) {
-                $("#Bar").html('<a href="Manage.html">Admin</a><a href="Sign_up.html">Singup</a><a href="Uri_Login.html">Login</a>');
+                $("#Bar").html('<a href="Manage.html">Admin</a><a href="Sign_up.html">Singup</a><a href="LogIn.html">Login</a>');
                 $("#sl").change(search_category);
                 ajaxCall("get", "../api/Businesses/", "", getSuccessAtr, getErrorAtr);
             }
